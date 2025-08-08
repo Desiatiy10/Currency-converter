@@ -8,7 +8,7 @@ import (
 func main() {
 	service.InitService()
 
-	time.Sleep(3 * time.Second)
+	time.Sleep(time.Second)
 
 	service.StopService()
 }
