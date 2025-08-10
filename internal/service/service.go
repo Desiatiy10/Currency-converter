@@ -2,31 +2,21 @@ package service
 
 import (
 	"fmt"
-	"learnpack/src/currency-converter/internal/model"
-	"learnpack/src/currency-converter/internal/repository"
+	mod "learnpack/src/currency-converter/internal/model"
+	repo "learnpack/src/currency-converter/internal/repository"
 	"log"
-	"sync"
 	"time"
 )
 
 var (
-	currencyChan = make(chan *model.Currency)
-	logChan      = make(chan repository.LogEntry)
+	currencyChan = make(chan *mod.Currency)
+	logChan      = make(chan repo.LogEntry)
 	stopChan     = make(chan struct{})
-
-	currencies    []*model.Currency
-	currencyMutex sync.Mutex
 )
 
-func getAllCurrencies() []*model.Currency {
-	currencyMutex.Lock()
-	defer currencyMutex.Unlock()
-	return currencies
-}
-
-func storeEntity(entity model.Entity) {
+func storeEntity(entity mod.Entity) {
 	switch v := entity.(type) {
-	case *model.Currency:
+	case *mod.Currency:
 		currencyChan <- v
 	default:
 		log.Panicf("неизвестный тип: %T", v)
@@ -34,29 +24,29 @@ func storeEntity(entity model.Entity) {
 }
 
 func processCurrencies() {
-	for {
-		select {
-		case currency := <-currencyChan:
-			currencyMutex.Lock()
-			currencies = append(currencies, currency)
-			currencyMutex.Unlock()
-			logChan <- repository.LogEntry{
-				EntityType: "Currency",
-				Entities:   []interface{}{currency}}
-		case <-stopChan:
-			return
+	select {
+	case currency := <-currencyChan:
+		repo.AddCurrency(currency)
+		logChan <- repo.LogEntry{
+			EntityType: "Currency",
+			Entities:   []interface{}{currency},
 		}
+	case <-stopChan:
+		return
 	}
 }
 
 func startLogging() {
-	var (
-		prevCurrencies = make(map[string]bool)
-	)
+	var prevCurrencies = make(map[string]bool)
 	for {
-		time.Sleep(time.Millisecond * 200)
+		select {
+		case <-stopChan:
+			return
+		default:
+			time.Sleep(time.Millisecond * 200)
+		}
 
-		currentCurrencies := getAllCurrencies()
+		currentCurrencies := repo.GetAllCurrencies()
 
 		for _, cur := range currentCurrencies {
 			if !prevCurrencies[cur.Code] {
@@ -69,8 +59,8 @@ func startLogging() {
 
 func InitRepository() {
 	go func() {
-		getAllCurrencies()
-		repository.ProcessEntities(storeEntity)
+		repo.GetAllCurrencies()
+		repo.ProcessEntities(storeEntity)
 	}()
 	go startLogging()
 }
@@ -79,7 +69,7 @@ func InitService() {
 	go processCurrencies()
 	InitRepository()
 
-	time.Sleep(time.Second)
+	time.Sleep(time.Second * 1)
 
 	printRepositoryState()
 }
@@ -95,7 +85,7 @@ func StopService() {
 }
 
 func printRepositoryState() {
-	currencies := getAllCurrencies()
+	currencies := repo.GetAllCurrencies()
 	if currencies == nil {
 		log.Println("Ошибка: список валют не получен")
 		return

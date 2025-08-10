@@ -1,14 +1,14 @@
 package main
 
 import (
-	"learnpack/src/currency-converter/internal/service"
+	serv "learnpack/src/currency-converter/internal/service"
 	"time"
 )
 
 func main() {
-	service.InitService()
+	serv.InitService()
 
-	time.Sleep(time.Second)
+	time.Sleep(time.Second * 1)
 
-	service.StopService()
+	serv.StopService()
 }
