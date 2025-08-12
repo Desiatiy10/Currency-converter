@@ -6,8 +6,8 @@ import (
 )
 
 var (
-	Currencies    []*model.Currency
-	CurrencyMutex sync.Mutex
+	Currencies    = make(map[string]*model.Currency)
+	CurrencyMutex sync.RWMutex
 )
 
 type LogEntry struct {
@@ -15,19 +15,23 @@ type LogEntry struct {
 	Entities   []interface{}
 }
 
-func GetAllCurrencies() []*model.Currency {
-	CurrencyMutex.Lock()
-	defer CurrencyMutex.Unlock()
-	return Currencies
+func GetAllCurrencies()map[string]*model.Currency {
+	CurrencyMutex.RLock()
+	defer CurrencyMutex.RUnlock()
+
+	copyMap := make(map[string]*model.Currency, len(Currencies))
+	for k, v := range Currencies {
+		copyMap[k] = v
+	}
+	return copyMap
 }
 
 func AddCurrency(currency *model.Currency) {
 	CurrencyMutex.Lock()
 	defer CurrencyMutex.Unlock()
 
-	Currencies = append(Currencies, currency)
+	Currencies[currency.Code] = currency
 }
 
-func ProcessEntities(storeFunc func(model.Entity)) {
-
+func ProcessEntities(storeFunc func(model.Entity)) { 
 }
