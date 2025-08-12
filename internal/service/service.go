@@ -1,22 +1,21 @@
 package service
 
 import (
-	"fmt"
-	mod "learnpack/src/currency-converter/internal/model"
+	"learnpack/src/currency-converter/internal/model"
 	repo "learnpack/src/currency-converter/internal/repository"
 	"log"
 	"time"
 )
 
 var (
-	currencyChan = make(chan *mod.Currency)
+	currencyChan = make(chan *model.Currency)
 	logChan      = make(chan repo.LogEntry)
 	stopChan     = make(chan struct{})
 )
 
-func storeEntity(entity mod.Entity) {
+func storeEntity(entity model.Entity) {
 	switch v := entity.(type) {
-	case *mod.Currency:
+	case *model.Currency:
 		currencyChan <- v
 	default:
 		log.Panicf("неизвестный тип: %T", v)
@@ -24,20 +23,27 @@ func storeEntity(entity mod.Entity) {
 }
 
 func processCurrencies() {
-	select {
-	case currency := <-currencyChan:
-		repo.AddCurrency(currency)
-		logChan <- repo.LogEntry{
-			EntityType: "Currency",
-			Entities:   []interface{}{currency},
+	for {
+		select {
+		case currency := <-currencyChan:
+			repo.AddCurrency(currency)
+			select {
+			case logChan <- repo.LogEntry{
+				EntityType: "Currency",
+				Entities:   []interface{}{currency},
+			}:
+			case <-stopChan:
+				return
+			}
+		case <-stopChan:
+			return
 		}
-	case <-stopChan:
-		return
 	}
 }
 
 func startLogging() {
-	var prevCurrencies = make(map[string]bool)
+	prevCurrencies := make(map[string]bool)
+
 	for {
 		select {
 		case <-stopChan:
@@ -59,8 +65,17 @@ func startLogging() {
 
 func InitRepository() {
 	go func() {
-		repo.GetAllCurrencies()
-		repo.ProcessEntities(storeEntity)
+		ticker := time.NewTicker(time.Second * 2)
+		defer ticker.Stop()
+
+		for {
+			select {
+			case <-ticker.C:
+				repo.ProcessEntities(storeEntity)
+			case <-stopChan:
+				return
+			}
+		}
 	}()
 	go startLogging()
 }
@@ -68,10 +83,6 @@ func InitRepository() {
 func InitService() {
 	go processCurrencies()
 	InitRepository()
-
-	time.Sleep(time.Second * 1)
-
-	printRepositoryState()
 }
 
 func StopRepository() {
@@ -82,25 +93,4 @@ func StopRepository() {
 
 func StopService() {
 	StopRepository()
-}
-
-func printRepositoryState() {
-	currencies := repo.GetAllCurrencies()
-	if currencies == nil {
-		log.Println("Ошибка: список валют не получен")
-		return
-	}
-
-	fmt.Println("\nТекущее состояние хранилища:")
-
-	fmt.Println("\nВалюты в системе:")
-	for i, currency := range currencies {
-		fmt.Printf("Валюта №%d:\n", i+1)
-		fmt.Printf("  Код: %s\n", currency.Code)
-		fmt.Printf("  Название: %s\n", currency.Name)
-		fmt.Printf("  Символ: %s\n", currency.Symbol)
-		fmt.Printf("  Курс: %f\n", currency.Rate)
-	}
-
-	fmt.Printf("\nВсего валют: %d\n", len(currencies))
 }
