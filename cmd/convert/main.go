@@ -2,23 +2,35 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"learnpack/src/currency-converter/service"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 )
 
 func main() {
 	//Родительский контекст и отложенная остановка всех горутин
 	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
+
+	signalChan := make(chan os.Signal, 1)
+	signal.Notify(signalChan, os.Interrupt, syscall.SIGTERM)
+
+	//Горутина для ловли сигнала.
+	//После передачи сигнала в sig вызывает cancel.
+	go func() {
+		sig := <-signalChan
+		fmt.Println("Получен сигнал остановки: ", sig)
+		cancel()
+	}()
 
 	service.InitService(ctx)
 
-	// usd := model.NewCurrency("USD", 1.00, "Dollar", "$")
-	// rub := model.NewCurrency("RUB", 0.012484, "Рубль", "₽")
+	<-ctx.Done()
+	fmt.Println("Ожидание завершения всех процессов.")
 
-	// conv := model.NewConversion(100, usd, rub, 8010)
+	time.Sleep(time.Second * 1)
 
-	// fmt.Printf(conv)
-
-	time.Sleep(time.Second * 7)
+	fmt.Println("Приложение завершено корректно.")
 }
