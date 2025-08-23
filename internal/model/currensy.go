@@ -1,35 +1,18 @@
 package model
 
 type Currency struct {
-	code   string
-	rate   float64
-	name   string
-	symbol string
+	Code   string  `json:"Код"`
+	Rate   float64 `json:"Курс"`
+	Name   string  `json:"Название"`
+	Symbol string  `json:"Символ"`
 }
 
 // Конструктор новой валюты
 func NewCurrency(code string, rate float64, name string, symbol string) *Currency {
 	return &Currency{
-		code:   code,
-		rate:   rate,
-		name:   name,
-		symbol: symbol,
+		Code:   code,
+		Rate:   rate,
+		Name:   name,
+		Symbol: symbol,
 	}
-}
-
-// Геттеры для приватных полей структуры
-func (c *Currency) Code() string {
-	return c.code
-}
-
-func (c *Currency) Rate() float64 {
-	return c.rate
-}
-
-func (c *Currency) Name() string {
-	return c.name
-}
-
-func (c *Currency) Symbol() string {
-	return c.symbol
 }
