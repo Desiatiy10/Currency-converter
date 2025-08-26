@@ -57,6 +57,9 @@ func generateData(ctx context.Context) {
 // и печатаем в log
 func startLogging(ctx context.Context) {
 	seen := make(map[string]bool)
+	for code := range repository.GetCurrencies() {
+		seen[code] = true
+	}
 
 	for {
 		select {

@@ -44,6 +44,11 @@ func main() {
 	conv := model.NewConversion(amount, usd, eur, result)
 	repository.Store(conv)
 
+	seen := make(map[string]bool)
+	for code := range repository.GetCurrencies() {
+		seen[code] = true
+	}
+
 	service.InitService(ctx)
 
 	<-ctx.Done()
