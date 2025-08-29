@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"learnpack/src/currency-converter/internal/model"
 	"learnpack/src/currency-converter/repository"
 	"log"
@@ -18,7 +17,6 @@ func processEntities(ctx context.Context, entityChan <-chan model.Entity) {
 	for {
 		select {
 		case <-ctx.Done():
-			fmt.Println("\nОбработчик получил сигнал об остановке.")
 			return
 		case e, ok := <-entityChan:
 			if !ok {
@@ -49,7 +47,6 @@ func generateData(ctx context.Context) {
 			entityChan <- cur
 			i++
 		case <-ctx.Done():
-			fmt.Println("\nГенератор получил сигнал\nоб остановке и закрывает канал")
 			close(entityChan)
 			return
 		}
@@ -60,18 +57,20 @@ func generateData(ctx context.Context) {
 // и печатаем в log
 func startLogging(ctx context.Context) {
 	seen := make(map[string]bool)
+	for code := range repository.GetCurrencies() {
+		seen[code] = true
+	}
 
 	for {
 		select {
 		case <-ctx.Done():
-			fmt.Println("\nЛоггер получил сигнал об остановке.")
 			return
 		case <-time.After(200 * time.Millisecond):
 			current := repository.GetCurrencies()
 			for _, cur := range current {
-				if !seen[cur.Code()] {
-					log.Printf("Добавлена валюта: %s (%s)", cur.Code(), cur.Name())
-					seen[cur.Code()] = true //Пометка, как выделенная
+				if !seen[cur.Code] {
+					log.Printf("Добавлена валюта: %s (%s)", cur.Code, cur.Name)
+					seen[cur.Code] = true //Пометка, как выделенная
 				}
 			}
 		}
