@@ -86,7 +86,7 @@ func UpdateCurrency(res http.ResponseWriter, req *http.Request) {
 // тест не пройден
 // Получает код валюты из URL, сравнивает код с кодом в мапе, удаляет из мапы и соханяет изменения в файле.
 func DeleteCurrency(res http.ResponseWriter, req *http.Request) {
-	codePart := strings.TrimPrefix(req.URL.Path, "/currency/delete")
+	codePart := strings.TrimPrefix(req.URL.Path, "/currency/delete/")
 	if codePart == "" {
 		usecase.WriteError(res, http.StatusBadRequest, "некорректный путь")
 		return
