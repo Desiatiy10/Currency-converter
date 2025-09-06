@@ -1,11 +1,14 @@
 package main
 
 import (
+	"currency-converter/internal/app"
+	"currency-converter/repository"
+	"currency-converter/service"
+
 	"context"
 	"fmt"
-	"learnpack/src/currency-converter/internal/model"
-	"learnpack/src/currency-converter/repository"
-	"learnpack/src/currency-converter/service"
+	"log"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -18,8 +21,6 @@ func main() {
 	signalChan := make(chan os.Signal, 1)
 	signal.Notify(signalChan, os.Interrupt, syscall.SIGTERM)
 
-	//Горутина для ловли сигнала.
-	//После передачи сигнала в sig вызывает cancel.
 	go func() {
 		sig := <-signalChan
 		fmt.Println("Получен сигнал остановки: ", sig)
@@ -33,34 +34,43 @@ func main() {
 		fmt.Println("ошибка загрузки конвертаций:", err)
 	}
 
-	//Временный код для теста.
-	printData()
-	usd := model.NewCurrency("USD", 1.0, "US Dollar", "$")
-	eur := model.NewCurrency("EUR", 1.2, "Euro", "€")
-	repository.Store(usd)
-	repository.Store(eur)
-	amount := 100.0
-	result := amount * (eur.Rate / usd.Rate)
-	conv := model.NewConversion(amount, usd, eur, result)
-	repository.Store(conv)
-
 	service.InitService(ctx)
+
+	router.RegisterRoutes()
+	go func() {
+		log.Println("Сервер запущен на :8080")
+		if err := http.ListenAndServe(":8080", nil); err != nil {
+			log.Fatal("ошибка сервера:", err)
+			cancel()
+		}
+	}()
 
 	<-ctx.Done()
 	fmt.Println("Завершаем программу...")
 }
 
-// Тестовая функция для вывода содежимого мапы и слайса
-func printData() {
-	currencies := repository.GetCurrencies()
-	fmt.Println("\nВалюты:")
-	for _, c := range currencies {
-		fmt.Printf("  %s (%s) = %.2f %s\n   **********************\n", c.Code, c.Name, c.Rate, c.Symbol)
-	}
+// 	//Временный код для теста.
+// 	printData()
+// 	usd := model.NewCurrency("USD", 1.0, "US Dollar", "$")
+// 	eur := model.NewCurrency("EUR", 1.2, "Euro", "€")
+// 	repository.Store(usd)
+// 	repository.Store(eur)
+// 	amount := 100.0
+// 	result := amount * (eur.Rate / usd.Rate)
+// 	conv := model.NewConversion(amount, usd, eur, result)
+// 	repository.Store(conv)
 
-	conversions := repository.GetConversions()
-	fmt.Println("Конверсии: ")
-	for _, conv := range conversions {
-		fmt.Printf("  %.2f %s -> %.2f %s\n   **********************\n", conv.Amount, conv.From.Code, conv.Result, conv.To.Code)
-	}
-}
+// // Тестовая функция для вывода содежимого мапы и слайса
+// func printData() {
+// 	currencies := repository.GetCurrencies()
+// 	fmt.Println("\nВалюты:")
+// 	for _, c := range currencies {
+// 		fmt.Printf("  %s (%s) = %.2f %s\n   **********************\n", c.Code, c.Name, c.Rate, c.Symbol)
+// 	}
+
+// 	conversions := repository.GetConversions()
+// 	fmt.Println("Конверсии: ")
+// 	for _, conv := range conversions {
+// 		fmt.Printf("  %.2f %s -> %.2f %s\n   **********************\n", conv.Amount, conv.From.Code, conv.Result, conv.To.Code)
+// 	}
+// }

@@ -1,10 +1,10 @@
 package model
 
 type Currency struct {
-	Code   string  `json:"Код"`
-	Rate   float64 `json:"Курс"`
-	Name   string  `json:"Название"`
-	Symbol string  `json:"Символ"`
+	Code   string  `json:"code"`
+	Rate   float64 `json:"rate"`
+	Name   string  `json:"name"`
+	Symbol string  `json:"symbol"`
 }
 
 // Конструктор новой валюты

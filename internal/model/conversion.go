@@ -1,10 +1,10 @@
 package model
 
 type Conversion struct {
-	Amount float64   `json:"Сумма"`
-	From   *Currency `json:"Из "`
-	To     *Currency `json:"В "`
-	Result float64   `json:"Результат: "`
+	Amount float64   `json:"amount"`
+	From   *Currency `json:"from"`
+	To     *Currency `json:"to"`
+	Result float64   `json:"result"`
 }
 
 // Конструктор конвертирования

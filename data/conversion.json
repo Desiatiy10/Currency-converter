@@ -1,0 +1,162 @@
+[
+  {
+    "amount": 100,
+    "from": {
+      "code": "USD",
+      "rate": 1,
+      "name": "US Dollar",
+      "symbol": "$"
+    },
+    "to": {
+      "code": "EUR",
+      "rate": 1.2,
+      "name": "Euro",
+      "symbol": "€"
+    },
+    "result": 120
+  },
+  {
+    "amount": 100,
+    "from": {
+      "code": "USD",
+      "rate": 1,
+      "name": "US Dollar",
+      "symbol": "$"
+    },
+    "to": {
+      "code": "EUR",
+      "rate": 1.2,
+      "name": "Euro",
+      "symbol": "€"
+    },
+    "result": 120
+  },
+  {
+    "amount": 100,
+    "from": {
+      "code": "USD",
+      "rate": 1,
+      "name": "US Dollar",
+      "symbol": "$"
+    },
+    "to": {
+      "code": "EUR",
+      "rate": 1.2,
+      "name": "Euro",
+      "symbol": "€"
+    },
+    "result": 120
+  },
+  {
+    "amount": 100,
+    "from": {
+      "code": "USD",
+      "rate": 1,
+      "name": "US Dollar",
+      "symbol": "$"
+    },
+    "to": {
+      "code": "EUR",
+      "rate": 1.2,
+      "name": "Euro",
+      "symbol": "€"
+    },
+    "result": 120
+  },
+  {
+    "amount": 100,
+    "from": {
+      "code": "USD",
+      "rate": 1,
+      "name": "US Dollar",
+      "symbol": "$"
+    },
+    "to": {
+      "code": "EUR",
+      "rate": 1.2,
+      "name": "Euro",
+      "symbol": "€"
+    },
+    "result": 120
+  },
+  {
+    "amount": 100,
+    "from": {
+      "code": "USD",
+      "rate": 1,
+      "name": "US Dollar",
+      "symbol": "$"
+    },
+    "to": {
+      "code": "EUR",
+      "rate": 1.2,
+      "name": "Euro",
+      "symbol": "€"
+    },
+    "result": 120
+  },
+  {
+    "amount": 100,
+    "from": {
+      "code": "USD",
+      "rate": 1,
+      "name": "US Dollar",
+      "symbol": "$"
+    },
+    "to": {
+      "code": "EUR",
+      "rate": 1.2,
+      "name": "Euro",
+      "symbol": "€"
+    },
+    "result": 120
+  },
+  {
+    "amount": 100,
+    "from": {
+      "code": "USD",
+      "rate": 1,
+      "name": "US Dollar",
+      "symbol": "$"
+    },
+    "to": {
+      "code": "EUR",
+      "rate": 1.2,
+      "name": "Euro",
+      "symbol": "€"
+    },
+    "result": 120
+  },
+  {
+    "amount": 100,
+    "from": {
+      "code": "USD",
+      "rate": 75.5,
+      "name": "Доллар США",
+      "symbol": "$"
+    },
+    "to": {
+      "code": "EUR",
+      "rate": 1.2,
+      "name": "Euro",
+      "symbol": "€"
+    },
+    "result": 1.5894039735099337
+  },
+  {
+    "amount": 100,
+    "from": {
+      "code": "USD",
+      "rate": 1,
+      "name": "US Dollar",
+      "symbol": "$"
+    },
+    "to": {
+      "code": "EUR",
+      "rate": 1.2,
+      "name": "Euro",
+      "symbol": "€"
+    },
+    "result": 120
+  }
+]
