@@ -113,7 +113,7 @@ func DeleteCurFromMap(code string) error {
 
 // Функция для обновления валюты(не копии)
 func UpdataCurInMap(cur *model.Currency) error {
-	mu.Unlock()
+	mu.Lock()
 	defer mu.Unlock()
 
 	if _, ok := currencies[cur.Code]; !ok {

@@ -10,8 +10,8 @@ import (
 	"strings"
 )
 
-// Создает валюту из запроса через структуру и с помощью функции Decode записывает JSON в cur
-// и отправляет ответом на запрос /currency/create c методом POST.
+// Получает валюту в теле запроса и отдает
+// в repository.Store через URL /currency/create c методом POST.
 func CreateCurrency(res http.ResponseWriter, req *http.Request) {
 	var cur model.Currency
 	if err := json.NewDecoder(req.Body).Decode(&cur); err != nil {
@@ -40,8 +40,8 @@ func ListCurrencies(res http.ResponseWriter, req *http.Request) {
 	usecase.WriteJson(res, http.StatusOK, arr)
 }
 
-// тест не пройден. Вместо одной конкретной выдает весь список.
-// Получает код валюты из URL и копии мапы и отправляет ее ответом
+// Получает код валюты из URL /currency/get/{code} c методом GET
+// находит в копии мапы и отправляет ее ответом.
 func GetCurrency(res http.ResponseWriter, req *http.Request) {
 	codePart := strings.TrimPrefix(req.URL.Path, "/currency/get/")
 	if codePart == "" {
@@ -58,8 +58,8 @@ func GetCurrency(res http.ResponseWriter, req *http.Request) {
 	usecase.WriteJson(res, http.StatusOK, cur)
 }
 
-// тест не пройден
-// Получает код валюты из URL находит ее в копии мапы и отправляет ее ответом
+// Получает код валюты из URL /currency/get/{code} c методом PUT
+// По телу запроса и модели molel.Currency находит в мапе и обновялет данные.
 func UpdateCurrency(res http.ResponseWriter, req *http.Request) {
 	codePart := strings.TrimPrefix(req.URL.Path, "/currency/put/")
 	if codePart == "" {
@@ -83,8 +83,8 @@ func UpdateCurrency(res http.ResponseWriter, req *http.Request) {
 	usecase.WriteJson(res, http.StatusOK, upd)
 }
 
-// тест не пройден
-// Получает код валюты из URL, сравнивает код с кодом в мапе, удаляет из мапы и соханяет изменения в файле.
+// Получает код валюты из URL /currency/delete/{code} c методом DELETE
+// находит в мапе и удаляет данные.
 func DeleteCurrency(res http.ResponseWriter, req *http.Request) {
 	codePart := strings.TrimPrefix(req.URL.Path, "/currency/delete/")
 	if codePart == "" {
@@ -100,8 +100,8 @@ func DeleteCurrency(res http.ResponseWriter, req *http.Request) {
 	usecase.WriteJson(res, http.StatusOK, map[string]string{"статус:": "удалено"})
 }
 
-// Принимает JSON-запрос с параметрами конвертации, выполняет конвертацию по тестовой формуле
-// и отправляет в repository.Store
+// Получает валюты и сумму в теле запроса по URL /conversion/create c методом PUT
+// выполняет конвертацию по тестовой формуле и отправляет в repository.Store.
 func CreateConversion(res http.ResponseWriter, req *http.Request) {
 	var conv struct {
 		Amount float64 `json:"amount"`
@@ -132,7 +132,7 @@ func CreateConversion(res http.ResponseWriter, req *http.Request) {
 	usecase.WriteJson(res, http.StatusCreated, conversion)
 }
 
-// Получает копию слайса конвертаций по запросу
+// Получает копию слайса конвертаций по запросу /conversions/get с методом GET
 func ListConversions(res http.ResponseWriter, req *http.Request) {
 	data := repository.GetConversions()
 	usecase.WriteJson(res, http.StatusOK, data)
