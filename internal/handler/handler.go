@@ -58,7 +58,7 @@ func GetCurrency(res http.ResponseWriter, req *http.Request) {
 	usecase.WriteJson(res, http.StatusOK, cur)
 }
 
-// Получает код валюты из URL /currency/get/{code} c методом PUT
+// Получает код валюты из URL /currency/put/{code} c методом PUT
 // По телу запроса и модели molel.Currency находит в мапе и обновялет данные.
 func UpdateCurrency(res http.ResponseWriter, req *http.Request) {
 	codePart := strings.TrimPrefix(req.URL.Path, "/currency/put/")
@@ -74,11 +74,6 @@ func UpdateCurrency(res http.ResponseWriter, req *http.Request) {
 	}
 
 	upd.Code = codePart
-	if err := repository.UpdataCurInMap(&upd); err != nil {
-		usecase.WriteError(res, http.StatusNotFound, "валюта не найдена")
-		return
-	}
-
 	repository.Store(&upd)
 	usecase.WriteJson(res, http.StatusOK, upd)
 }
