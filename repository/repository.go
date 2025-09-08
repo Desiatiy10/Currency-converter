@@ -1,9 +1,10 @@
 package repository
 
 import (
+	"currency-converter/internal/model"
+
 	"encoding/json"
 	"fmt"
-	"learnpack/src/currency-converter/internal/model"
 	"log"
 	"os"
 	"sync"
@@ -96,6 +97,30 @@ func LoadConversionsFromFile() error {
 	}
 
 	return nil
+}
+
+// Функция для удаления валюты(не копии)
+func DeleteCurFromMap(code string) error {
+	mu.Lock()
+	defer mu.Unlock()
+
+	if _, ok := currencies[code]; !ok {
+		return fmt.Errorf("валюта не найдена")
+	}
+	delete(currencies, code)
+	return SaveCurToFile()
+}
+
+// Функция для обновления валюты(не копии)
+func UpdataCurInMap(cur *model.Currency) error {
+	mu.Lock()
+	defer mu.Unlock()
+
+	if _, ok := currencies[cur.Code]; !ok {
+		return fmt.Errorf("валюта %s не найдена", cur.Code)
+	}
+	currencies[cur.Code] = cur
+	return SaveCurToFile()
 }
 
 // Возвращает копию мапы валют

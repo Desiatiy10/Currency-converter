@@ -1,9 +1,10 @@
 package service
 
 import (
+	"currency-converter/internal/model"
+	"currency-converter/repository"
+
 	"context"
-	"learnpack/src/currency-converter/internal/model"
-	"learnpack/src/currency-converter/repository"
 	"log"
 	"time"
 )
