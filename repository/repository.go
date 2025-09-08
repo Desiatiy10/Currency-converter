@@ -24,7 +24,7 @@ var (
 
 // Сравнивает сущность по типу, полученную из processEntities
 // и отправляет в мапу или слайс и свои json файлы.
-func Store(e model.Entity) {
+func Store(e model.Entity) error {
 	mu.Lock()
 	defer mu.Unlock()
 
@@ -40,6 +40,7 @@ func Store(e model.Entity) {
 			log.Println("ошибка сохранения конвертаций:", err)
 		}
 	}
+	return nil
 }
 
 // Содержимое мапы в json
@@ -112,7 +113,7 @@ func DeleteCurFromMap(code string) error {
 }
 
 // Функция для обновления валюты(не копии)
-func UpdataCurInMap(cur *model.Currency) error {
+func UpdateCurInMap(cur *model.Currency) error {
 	mu.Lock()
 	defer mu.Unlock()
 

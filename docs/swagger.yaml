@@ -1,0 +1,205 @@
+basePath: /
+definitions:
+  model.Conversion:
+    properties:
+      amount:
+        type: number
+      from:
+        $ref: '#/definitions/model.Currency'
+      result:
+        type: number
+      to:
+        $ref: '#/definitions/model.Currency'
+    type: object
+  model.ConversionRequest:
+    properties:
+      amount:
+        type: number
+      from:
+        type: string
+      to:
+        type: string
+    type: object
+  model.Currency:
+    properties:
+      code:
+        type: string
+      name:
+        type: string
+      rate:
+        type: number
+      symbol:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: REST API для управления валютами и конвертациями
+  title: Currency Converter API
+  version: "1.0"
+paths:
+  /conversion:
+    post:
+      consumes:
+      - application/json
+      description: Конвертирует валюту и сохраняет результат
+      parameters:
+      - description: Запрос на конвертацию
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.ConversionRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Conversion'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Создать конвертацию
+      tags:
+      - conversion
+  /conversions:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Conversion'
+            type: array
+      summary: Получить список конвертаций
+      tags:
+      - conversion
+  /currencies:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Currency'
+            type: array
+      summary: Получить список валют
+      tags:
+      - currency
+  /currency:
+    post:
+      consumes:
+      - application/json
+      description: Добавляет новую валюту в хранилище
+      parameters:
+      - description: Валюта
+        in: body
+        name: currency
+        required: true
+        schema:
+          $ref: '#/definitions/model.Currency'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Currency'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Создать валюту
+      tags:
+      - currency
+  /currency/{code}:
+    delete:
+      parameters:
+      - description: Код валюты
+        in: path
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Удалить валюту
+      tags:
+      - currency
+    get:
+      parameters:
+      - description: Код валюты
+        in: path
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Currency'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Получить валюту
+      tags:
+      - currency
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Код валюты
+        in: path
+        name: code
+        required: true
+        type: string
+      - description: Валюта
+        in: body
+        name: currency
+        required: true
+        schema:
+          $ref: '#/definitions/model.Currency'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Currency'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Обновить валюту
+      tags:
+      - currency
+swagger: "2.0"
