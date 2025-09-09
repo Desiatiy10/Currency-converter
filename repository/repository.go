@@ -24,7 +24,7 @@ var (
 
 // Сравнивает сущность по типу, полученную из processEntities
 // и отправляет в мапу или слайс и свои json файлы.
-func Store(e model.Entity) error {
+func Store(e model.Entity) {
 	mu.Lock()
 	defer mu.Unlock()
 
@@ -40,7 +40,6 @@ func Store(e model.Entity) error {
 			log.Println("ошибка сохранения конвертаций:", err)
 		}
 	}
-	return nil
 }
 
 // Содержимое мапы в json
