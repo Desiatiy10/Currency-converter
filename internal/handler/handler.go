@@ -7,11 +7,18 @@ import (
 
 	"encoding/json"
 	"net/http"
-	"strings"
 )
 
-// Получает валюту в теле запроса и отдает
-// в repository.Store через URL /currency/create c методом POST.
+// CreateCurrency godoc
+// @Summary Создать валюту
+// @Description Добавляет новую валюту в хранилище
+// @Tags currency
+// @Accept json
+// @Produce json
+// @Param currency body model.Currency true "Валюта"
+// @Success 201 {object} model.Currency
+// @Failure 400 {object} map[string]string
+// @Router /currency [post]
 func CreateCurrency(res http.ResponseWriter, req *http.Request) {
 	var cur model.Currency
 	if err := json.NewDecoder(req.Body).Decode(&cur); err != nil {
@@ -28,7 +35,12 @@ func CreateCurrency(res http.ResponseWriter, req *http.Request) {
 	usecase.WriteJson(res, http.StatusCreated, cur)
 }
 
-// Получает копию мапы валют и отправляет ее ответом на запрос /currencies/get с методом GET.
+// ListCurrencies godoc
+// @Summary Получить список валют
+// @Tags currency
+// @Produce json
+// @Success 200 {array} model.Currency
+// @Router /currencies [get]
 func ListCurrencies(res http.ResponseWriter, req *http.Request) {
 	data := repository.GetCurrencies()
 
@@ -40,54 +52,65 @@ func ListCurrencies(res http.ResponseWriter, req *http.Request) {
 	usecase.WriteJson(res, http.StatusOK, arr)
 }
 
-// Получает код валюты из URL /currency/get/{code} c методом GET
-// находит в копии мапы и отправляет ее ответом.
+// GetCurrency godoc
+// @Summary Получить валюту
+// @Tags currency
+// @Produce json
+// @Param code path string true "Код валюты"
+// @Success 200 {object} model.Currency
+// @Failure 404 {object} map[string]string
+// @Router /currency/{code} [get]
 func GetCurrency(res http.ResponseWriter, req *http.Request) {
-	codePart := strings.TrimPrefix(req.URL.Path, "/currency/get/")
-	if codePart == "" {
-		usecase.WriteError(res, http.StatusBadRequest, "некорректный путь")
-		return
-	}
+	code := req.PathValue("code")
 
 	data := repository.GetCurrencies()
-	cur, ok := data[codePart]
-	if !ok {
-		usecase.WriteError(res, http.StatusNotFound, "валюта не найдена")
+	if currency, ok := data[code]; ok {
+		usecase.WriteJson(res, http.StatusOK, currency)
 		return
 	}
-	usecase.WriteJson(res, http.StatusOK, cur)
+	usecase.WriteError(res, http.StatusNotFound, "валюта не найдена")
 }
 
-// Получает код валюты из URL /currency/put/{code} c методом PUT
-// По телу запроса и модели molel.Currency находит в мапе и обновялет данные.
+// UpdateCurrency godoc
+// @Summary Обновить валюту
+// @Tags currency
+// @Accept json
+// @Produce json
+// @Param code path string true "Код валюты"
+// @Param currency body model.Currency true "Валюта"
+// @Success 200 {object} model.Currency
+// @Failure 400 {object} map[string]string
+// @Router /currency/{code} [put]
 func UpdateCurrency(res http.ResponseWriter, req *http.Request) {
-	codePart := strings.TrimPrefix(req.URL.Path, "/currency/put/")
-	if codePart == "" {
-		usecase.WriteError(res, http.StatusBadRequest, "некорректный путь")
-		return
-	}
+	code := req.PathValue("code")
 
 	var upd model.Currency
 	if err := json.NewDecoder(req.Body).Decode(&upd); err != nil {
-		usecase.WriteJson(res, http.StatusBadRequest, "невалидный JSON")
+		usecase.WriteError(res, http.StatusBadRequest, "невалидный JSON")
 		return
 	}
 
-	upd.Code = codePart
-	repository.Store(&upd)
+	upd.Code = code
+	if err := repository.UpdateCurInMap(&upd); err != nil {
+		usecase.WriteError(res, http.StatusNotFound, "валюта не найдена")
+		return
+	}
+
 	usecase.WriteJson(res, http.StatusOK, upd)
 }
 
-// Получает код валюты из URL /currency/delete/{code} c методом DELETE
-// находит в мапе и удаляет данные.
+// DeleteCurrency godoc
+// @Summary Удалить валюту
+// @Tags currency
+// @Produce json
+// @Param code path string true "Код валюты"
+// @Success 200 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router /currency/{code} [delete]
 func DeleteCurrency(res http.ResponseWriter, req *http.Request) {
-	codePart := strings.TrimPrefix(req.URL.Path, "/currency/delete/")
-	if codePart == "" {
-		usecase.WriteError(res, http.StatusBadRequest, "некорректный путь")
-		return
-	}
+	code := req.PathValue("code")
 
-	if err := repository.DeleteCurFromMap(codePart); err != nil {
+	if err := repository.DeleteCurFromMap(code); err != nil {
 		usecase.WriteError(res, http.StatusNotFound, "валюта не найдена")
 		return
 	}
@@ -95,8 +118,16 @@ func DeleteCurrency(res http.ResponseWriter, req *http.Request) {
 	usecase.WriteJson(res, http.StatusOK, map[string]string{"статус:": "удалено"})
 }
 
-// Получает валюты и сумму в теле запроса по URL /conversion/create c методом PUT
-// выполняет конвертацию по тестовой формуле и отправляет в repository.Store.
+// CreateConversion godoc
+// @Summary Создать конвертацию
+// @Description Конвертирует валюту и сохраняет результат
+// @Tags conversion
+// @Accept json
+// @Produce json
+// @Param request body model.ConversionRequest true "Запрос на конвертацию"
+// @Success 201 {object} model.Conversion
+// @Failure 400 {object} map[string]string
+// @Router /conversion [post]
 func CreateConversion(res http.ResponseWriter, req *http.Request) {
 	var conv struct {
 		Amount float64 `json:"amount"`
@@ -127,7 +158,12 @@ func CreateConversion(res http.ResponseWriter, req *http.Request) {
 	usecase.WriteJson(res, http.StatusCreated, conversion)
 }
 
-// Получает копию слайса конвертаций по запросу /conversions/get с методом GET
+// ListConversions godoc
+// @Summary Получить список конвертаций
+// @Tags conversion
+// @Produce json
+// @Success 200 {array} model.Conversion
+// @Router /conversions [get]
 func ListConversions(res http.ResponseWriter, req *http.Request) {
 	data := repository.GetConversions()
 	usecase.WriteJson(res, http.StatusOK, data)

@@ -1,66 +1,46 @@
 package router
 
 import (
+	"context"
 	"currency-converter/internal/handler"
-	"currency-converter/internal/usecase"
-
+	"log"
 	"net/http"
+
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
-func RegisterRoutes() {
-	http.HandleFunc("/currency/create", func(res http.ResponseWriter, req *http.Request) {
-		if req.Method == http.MethodPost {
-			handler.CreateCurrency(res, req)
-			return
-		}
-		usecase.WriteError(res, http.StatusMethodNotAllowed, "метод не поддерживается")
-	})
+type Server struct {
+	httpServer *http.Server
+}
 
-	http.HandleFunc("/currencies/get", func(res http.ResponseWriter, req *http.Request) {
-		if req.Method == http.MethodGet {
-			handler.ListCurrencies(res, req)
-			return
-		}
-		usecase.WriteError(res, http.StatusMethodNotAllowed, "метод не поддерживается")
-	})
+func New(addr string) *Server {
+	mux := http.NewServeMux()
 
-	http.HandleFunc("/currency/get/", func(res http.ResponseWriter, req *http.Request) {
-		if req.Method == http.MethodGet {
-			handler.GetCurrency(res, req)
-			return
-		}
-		usecase.WriteError(res, http.StatusMethodNotAllowed, "метод не поддерживается")
-	})
+	mux.HandleFunc("POST /currency", handler.CreateCurrency)
+	mux.HandleFunc("GET /currency/{code}", handler.GetCurrency)
+	mux.HandleFunc("GET /currencies", handler.ListCurrencies)
+	mux.HandleFunc("PUT /currency/{code}", handler.UpdateCurrency)
+	mux.HandleFunc("DELETE /currency/{code}", handler.DeleteCurrency)
 
-	http.HandleFunc("/currency/put/", func(res http.ResponseWriter, req *http.Request) {
-		if req.Method == http.MethodPut {
-			handler.UpdateCurrency(res, req)
-			return
-		}
-		usecase.WriteError(res, http.StatusMethodNotAllowed, "метод не поддерживается")
-	})
+	mux.HandleFunc("POST /conversion", handler.CreateConversion)
+	mux.HandleFunc("GET /conversions", handler.ListConversions)
 
-	http.HandleFunc("/currency/delete/", func(res http.ResponseWriter, req *http.Request) {
-		if req.Method == http.MethodDelete {
-			handler.DeleteCurrency(res, req)
-			return
-		}
-		usecase.WriteError(res, http.StatusMethodNotAllowed, "метод не поддерживается")
-	})
+	mux.Handle("/swagger/", httpSwagger.WrapHandler)
 
-	http.HandleFunc("/conversion/create", func(res http.ResponseWriter, req *http.Request) {
-		if req.Method == http.MethodPost {
-			handler.CreateConversion(res, req)
-			return
-		}
-		usecase.WriteError(res, http.StatusMethodNotAllowed, "метод не поддерживается")
-	})
+	return &Server{
+		httpServer: &http.Server{
+			Addr:    addr,
+			Handler: mux,
+		},
+	}
+}
 
-	http.HandleFunc("/conversions/get", func(res http.ResponseWriter, req *http.Request) {
-		if req.Method == http.MethodGet {
-			handler.ListConversions(res, req)
-			return
-		}
-		usecase.WriteError(res, http.StatusMethodNotAllowed, "метод не поддерживается")
-	})
+func (s *Server) Start() error {
+	log.Println("Сервер запущен на ", s.httpServer.Addr)
+	return s.httpServer.ListenAndServe()
+}
+
+func (s *Server) Stop(ctx context.Context) error {
+	log.Println("Остановка сервера...")
+	return s.httpServer.Shutdown(ctx)
 }

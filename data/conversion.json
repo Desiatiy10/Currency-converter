@@ -158,5 +158,37 @@
       "symbol": "€"
     },
     "result": 120
+  },
+  {
+    "amount": 0.666,
+    "from": {
+      "code": "Тест",
+      "rate": 200,
+      "name": "Измененный Тест",
+      "symbol": "%"
+    },
+    "to": {
+      "code": "USDevil",
+      "rate": 10000,
+      "name": "testUPD",
+      "symbol": "ээ"
+    },
+    "result": 33.300000000000004
+  },
+  {
+    "amount": 0.666,
+    "from": {
+      "code": "Тест",
+      "rate": 200,
+      "name": "Измененный Тест",
+      "symbol": "%"
+    },
+    "to": {
+      "code": "USDevil",
+      "rate": 10000,
+      "name": "testUPD",
+      "symbol": "ээ"
+    },
+    "result": 33.300000000000004
   }
 ]

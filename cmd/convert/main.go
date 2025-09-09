@@ -1,19 +1,24 @@
 package main
 
 import (
+	_ "currency-converter/docs"
 	"currency-converter/internal/app"
 	"currency-converter/repository"
 	"currency-converter/service"
+	"time"
 
 	"context"
 	"fmt"
-	"log"
-	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 )
 
+// @title Currency Converter API
+// @version 1.0
+// @description REST API для управления валютами и конвертациями
+// @host localhost:8080
+// @BasePath /
 func main() {
 	//Родительский контекст и отложенная остановка всех горутин
 	ctx, cancel := context.WithCancel(context.Background())
@@ -36,41 +41,23 @@ func main() {
 
 	service.InitService(ctx)
 
-	router.RegisterRoutes()
+	srv := router.New(":8080")
 	go func() {
-		log.Println("Сервер запущен на :8080")
-		if err := http.ListenAndServe(":8080", nil); err != nil {
-			log.Fatal("ошибка сервера:", err)
+		if err := srv.Start(); err != nil {
+			fmt.Println("ошибка сервера:", err)
 			cancel()
 		}
 	}()
 
 	<-ctx.Done()
+
+	// Graceful shutdown
+	fmt.Println("Выключаем сервер...")
+	shutdownCtx, cancelShutdown := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancelShutdown()
+	if err := srv.Stop(shutdownCtx); err != nil {
+		fmt.Println("ошибка при завершении сервера:", err)
+	}
+
 	fmt.Println("Завершаем программу...")
 }
-
-// 	//Временный код для теста.
-// 	printData()
-// 	usd := model.NewCurrency("USD", 1.0, "US Dollar", "$")
-// 	eur := model.NewCurrency("EUR", 1.2, "Euro", "€")
-// 	repository.Store(usd)
-// 	repository.Store(eur)
-// 	amount := 100.0
-// 	result := amount * (eur.Rate / usd.Rate)
-// 	conv := model.NewConversion(amount, usd, eur, result)
-// 	repository.Store(conv)
-
-// // Тестовая функция для вывода содежимого мапы и слайса
-// func printData() {
-// 	currencies := repository.GetCurrencies()
-// 	fmt.Println("\nВалюты:")
-// 	for _, c := range currencies {
-// 		fmt.Printf("  %s (%s) = %.2f %s\n   **********************\n", c.Code, c.Name, c.Rate, c.Symbol)
-// 	}
-
-// 	conversions := repository.GetConversions()
-// 	fmt.Println("Конверсии: ")
-// 	for _, conv := range conversions {
-// 		fmt.Printf("  %.2f %s -> %.2f %s\n   **********************\n", conv.Amount, conv.From.Code, conv.Result, conv.To.Code)
-// 	}
-// }

@@ -7,6 +7,12 @@ type Conversion struct {
 	Result float64   `json:"result"`
 }
 
+type ConversionRequest struct {
+	Amount float64 `json:"amount"`
+	From   string  `json:"from"`
+	To     string  `json:"to"`
+}
+
 // Конструктор конвертирования
 func NewConversion(amount float64, from *Currency, to *Currency, result float64) *Conversion {
 	return &Conversion{
