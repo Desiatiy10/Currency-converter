@@ -330,8 +330,6 @@ var SwaggerInfo = &swag.Spec{
 	Description:      "REST API для управления валютами и конвертациями",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
-	LeftDelim:        "{{",
-	RightDelim:       "}}",
 }
 
 func init() {
