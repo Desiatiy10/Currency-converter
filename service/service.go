@@ -70,7 +70,7 @@ func startLogging(ctx context.Context) {
 			current := repository.GetCurrencies()
 			for _, cur := range current {
 				if !seen[cur.Code] {
-					log.Printf("Добавлена валюта: %s (%s)", cur.Code, cur.Name)
+					log.Printf("Currency added: %s (%s)", cur.Code, cur.Name)
 					seen[cur.Code] = true //Пометка, как выделенная
 				}
 			}

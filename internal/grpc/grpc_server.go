@@ -18,13 +18,13 @@ type CurrencyServer struct {
 func (s *CurrencyServer) CreateCurrency(ctx context.Context, req *proto.CreateCurrencyRequest) (*proto.Currency, error) {
 	switch {
 	case req.Currency.Code == "":
-		return nil, status.Errorf(codes.InvalidArgument, "требутся указать код валюты.")
+		return nil, status.Errorf(codes.InvalidArgument, "enter the currency code.")
 	case req.Currency.Rate <= 0:
-		return nil, status.Errorf(codes.InvalidArgument, "курс должен быть > 0.")
+		return nil, status.Errorf(codes.InvalidArgument, "the rate should be > 0.")
 	case req.Currency.Name == "":
-		return nil, status.Errorf(codes.InvalidArgument, "название не должно быть пустым.")
+		return nil, status.Errorf(codes.InvalidArgument, "enter the currency name.")
 	case req.Currency.Symbol == "":
-		return nil, status.Errorf(codes.InvalidArgument, "укажите символ.")
+		return nil, status.Errorf(codes.InvalidArgument, "enter the currency symbol.")
 	}
 
 	cur := &model.Currency{
@@ -44,7 +44,7 @@ func (s *CurrencyServer) CreateCurrency(ctx context.Context, req *proto.CreateCu
 	}, nil
 }
 
-func (s *CurrencyServer) ListCurrencies(ctx context.Context, _ *proto.ListCurrenciesRequest) (*proto.ListCurrenciesResponse, error) {
+func (s *CurrencyServer) ListCurrencies(ctx context.Context, _ *emptypb.Empty) (*proto.ListCurrenciesResponse, error) {
 	data := repository.GetCurrencies()
 	result := make([]*proto.Currency, 0, len(data))
 	for _, v := range data {
@@ -58,16 +58,16 @@ func (s *CurrencyServer) ListCurrencies(ctx context.Context, _ *proto.ListCurren
 	return &proto.ListCurrenciesResponse{Currencies: result}, nil
 }
 
-func (s *CurrencyServer) GetCurrency(ctx context.Context, req *proto.GetCurrencyRequest) (*proto.Currency, error) {
+func (s *CurrencyServer) GetCurrency(ctx context.Context, req *proto.Currency) (*proto.Currency, error) {
 	if req.Code == "" {
-		return nil, status.Errorf(codes.InvalidArgument, "требутся указать код валюты.")
+		return nil, status.Errorf(codes.InvalidArgument, "enter the currency code.")
 	}
 
 	data := repository.GetCurrencies()
 
 	cur, ok := data[req.Code]
 	if !ok {
-		return nil, status.Errorf(codes.NotFound, "валюта %s не найдена.", cur.Code)
+		return nil, status.Errorf(codes.NotFound, "the currency %s not found.", cur.Code)
 	}
 
 	return &proto.Currency{
@@ -78,50 +78,50 @@ func (s *CurrencyServer) GetCurrency(ctx context.Context, req *proto.GetCurrency
 	}, nil
 }
 
-func (s *CurrencyServer) UpdateCurrency(ctx context.Context, req *proto.UpdateCurrencyRequest) (*proto.Currency, error) {
+func (s *CurrencyServer) UpdateCurrency(ctx context.Context, req *proto.Currency) (*proto.Currency, error) {
 	switch {
-	case req.Currency == nil:
-		return nil, status.Errorf(codes.InvalidArgument, "пустое тело запроса для обновления.")
-	case req.Currency.Code == "":
-		return nil, status.Errorf(codes.InvalidArgument, "требутся указать код валюты.")
-	case req.Currency.Rate <= 0:
-		return nil, status.Errorf(codes.InvalidArgument, "курс должен быть > 0.")
-	case req.Currency.Name == "":
-		return nil, status.Errorf(codes.InvalidArgument, "название не должно быть пустым.")
-	case req.Currency.Symbol == "":
-		return nil, status.Errorf(codes.InvalidArgument, "укажите символ.")
+	case req == nil:
+		return nil, status.Errorf(codes.InvalidArgument, "empty request body.")
+	case req.Code == "":
+		return nil, status.Errorf(codes.InvalidArgument, "enter the currency code.")
+	case req.Rate <= 0:
+		return nil, status.Errorf(codes.InvalidArgument, "the rate should be > 0.")
+	case req.Name == "":
+		return nil, status.Errorf(codes.InvalidArgument, "enter the currency name.")
+	case req.Symbol == "":
+		return nil, status.Errorf(codes.InvalidArgument, "enter the currency symbol.")
 	}
 
 	curMap := repository.GetCurrencies()
-	old, ok := curMap[req.Currency.Code]
+	old, ok := curMap[req.Code]
 	if !ok {
-		return nil, status.Errorf(codes.NotFound, "валюта %s не найдена.", req.Currency.Code)
+		return nil, status.Errorf(codes.NotFound, "the currency %s not found.", req.Code)
 	}
 
-	old.Rate = req.Currency.Rate
-	old.Name = req.Currency.Name
-	old.Symbol = req.Currency.Symbol
+	old.Rate = req.Rate
+	old.Name = req.Name
+	old.Symbol = req.Symbol
 
 	if err := repository.UpdateCurInMap(old); err != nil {
-		return nil, status.Errorf(codes.Internal, "ошибка обновления: %v", err)
+		return nil, status.Errorf(codes.Internal, "update error : %v", err)
 	}
-	return req.Currency, nil
+	return req, nil
 }
 
-func (s *CurrencyServer) DeleteCurrency(ctx context.Context, req *proto.DeleteCurrencyRequest) (*emptypb.Empty, error) {
+func (s *CurrencyServer) DeleteCurrency(ctx context.Context, req *proto.Currency) (*emptypb.Empty, error) {
 	if err := repository.DeleteCurFromMap(req.Code); err != nil {
-		return nil, status.Errorf(codes.NotFound, "валюта %s не найдена", req.Code)
+		return nil, status.Errorf(codes.NotFound, "the currency %s not found", req.Code)
 	}
 	return &emptypb.Empty{}, nil
 }
 
-// *********************************Конверсии***************************************** 
+// *********************************Конверсии*****************************************
 
 type ConversionServer struct {
 	proto.UnimplementedConversionServiceServer
 }
 
-func (s *ConversionServer) ListConversions(ctx context.Context, _ *proto.ListConversionsRequest) (*proto.ListConversionsResponse, error) {
+func (s *ConversionServer) ListConversions(ctx context.Context, _ *emptypb.Empty) (*proto.ListConversionsResponse, error) {
 	data := repository.GetConversions()
 	result := make([]*proto.Conversion, 0, len(data))
 	for _, v := range data {
@@ -147,18 +147,18 @@ func (s *ConversionServer) ListConversions(ctx context.Context, _ *proto.ListCon
 
 func (s *ConversionServer) CreateConversion(ctx context.Context, req *proto.CreateConversionRequest) (*proto.Conversion, error) {
 	if req.Amount <= 0 {
-		return nil, status.Errorf(codes.InvalidArgument, "сумма должна быть > 0")
+		return nil, status.Errorf(codes.InvalidArgument, "the rate should be > 0")
 	} else if req.From == "" || req.To == "" {
-		return nil, status.Errorf(codes.InvalidArgument, "требуется указать код валюты From и To")
+		return nil, status.Errorf(codes.InvalidArgument, "need to enter the currency code of the source and target")
 	}
 
 	curs := repository.GetCurrencies()
 	from, ok1 := curs[req.From]
 	to, ok2 := curs[req.To]
 	if !ok1 || !ok2 {
-		return nil, status.Error(codes.NotFound, "не найдена исходная или целевая валюта.")
+		return nil, status.Error(codes.NotFound, "the source or target currency was not found..")
 	} else if from.Rate <= 0 || to.Rate <= 0 {
-		return nil, status.Errorf(codes.InvalidArgument, "курс валют должен быть > 0")
+		return nil, status.Errorf(codes.InvalidArgument, "the rate should be > 0")
 	}
 
 	result := req.Amount * (to.Rate / from.Rate)

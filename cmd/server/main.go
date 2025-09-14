@@ -38,10 +38,10 @@ func main() {
 	}()
 
 	if err := repository.LoadCurrenciesFromFile(); err != nil {
-		fmt.Println("ошибка загрузки валют: ", err)
+		fmt.Println("error загрузки валют: ", err)
 	}
 	if err := repository.LoadConversionsFromFile(); err != nil {
-		fmt.Println("ошибка загрузки конверсий:", err)
+		fmt.Println("error загрузки конверсий:", err)
 	}
 
 	service.InitService(ctx)
@@ -50,7 +50,7 @@ func main() {
 	srv := router.New(":8080")
 	go func() {
 		if err := srv.Start(); err != nil {
-			fmt.Println("ошибка сервера:", err)
+			fmt.Println("server error:", err)
 			cancel()
 		}
 	}()
@@ -59,14 +59,14 @@ func main() {
 	go func() {
 		lis, err := net.Listen("tcp", ":9090")
 		if err != nil {
-			log.Fatalf("ошибка прослушивания %v", err)
+			log.Fatalf("error to listen %v", err)
 		}
 		grpcServer := grpc.NewServer()
 		proto.RegisterCurrencyServiceServer(grpcServer, &grpc_server.CurrencyServer{})
 		proto.RegisterConversionServiceServer(grpcServer, &grpc_server.ConversionServer{})
-		fmt.Println("gRPC сервер запущен на :9090")
+		fmt.Println("gRPC сервер запущен на: 9090")
 		if err := grpcServer.Serve(lis); err != nil {
-			log.Fatalf("ошибка запуска сервера %v", err)
+			log.Fatalf("error run server gRPC %v", err)
 		}
 	}()
 
@@ -76,7 +76,7 @@ func main() {
 	shutdownCtx, cancelShutdown := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancelShutdown()
 	if err := srv.Stop(shutdownCtx); err != nil {
-		fmt.Println("ошибка при завершении сервера:", err)
+		fmt.Println("stopping server error:", err)
 	}
 
 	fmt.Println("Завершаем программу...")

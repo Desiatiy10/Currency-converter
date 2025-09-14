@@ -22,12 +22,12 @@ import (
 func CreateCurrency(res http.ResponseWriter, req *http.Request) {
 	var cur model.Currency
 	if err := json.NewDecoder(req.Body).Decode(&cur); err != nil {
-		usecase.WriteError(res, http.StatusBadRequest, "невалидный JSON")
+		usecase.WriteError(res, http.StatusBadRequest, "invalid JSON.")
 		return
 	}
 
 	if cur.Code == "" || cur.Rate <= 0 {
-		usecase.WriteError(res, http.StatusBadRequest, "код и курс - обязательные поля")
+		usecase.WriteError(res, http.StatusBadRequest, "need to enter the code and the rate.")
 		return
 	}
 
@@ -68,7 +68,7 @@ func GetCurrency(res http.ResponseWriter, req *http.Request) {
 		usecase.WriteJson(res, http.StatusOK, currency)
 		return
 	}
-	usecase.WriteError(res, http.StatusNotFound, "валюта не найдена")
+	usecase.WriteError(res, http.StatusNotFound, "invalid JSON")
 }
 
 // UpdateCurrency godoc
@@ -86,13 +86,13 @@ func UpdateCurrency(res http.ResponseWriter, req *http.Request) {
 
 	var upd model.Currency
 	if err := json.NewDecoder(req.Body).Decode(&upd); err != nil {
-		usecase.WriteError(res, http.StatusBadRequest, "невалидный JSON")
+		usecase.WriteError(res, http.StatusBadRequest, "invalid JSON")
 		return
 	}
 
 	upd.Code = code
 	if err := repository.UpdateCurInMap(&upd); err != nil {
-		usecase.WriteError(res, http.StatusNotFound, "валюта не найдена")
+		usecase.WriteError(res, http.StatusNotFound, "the currency not found")
 		return
 	}
 
@@ -111,11 +111,11 @@ func DeleteCurrency(res http.ResponseWriter, req *http.Request) {
 	code := req.PathValue("code")
 
 	if err := repository.DeleteCurFromMap(code); err != nil {
-		usecase.WriteError(res, http.StatusNotFound, "валюта не найдена")
+		usecase.WriteError(res, http.StatusNotFound, "the currncy not found")
 		return
 	}
 
-	usecase.WriteJson(res, http.StatusOK, map[string]string{"статус:": "удалено"})
+	usecase.WriteJson(res, http.StatusOK, map[string]string{"status:": "deleted"})
 }
 
 // CreateConversion godoc
@@ -135,7 +135,7 @@ func CreateConversion(res http.ResponseWriter, req *http.Request) {
 		To     string  `json:"to"`
 	}
 	if err := json.NewDecoder(req.Body).Decode(&conv); err != nil {
-		usecase.WriteError(res, http.StatusBadRequest, "невалидный JSON")
+		usecase.WriteError(res, http.StatusBadRequest, "invalid JSON")
 		return
 	}
 
@@ -143,12 +143,12 @@ func CreateConversion(res http.ResponseWriter, req *http.Request) {
 	from, ok1 := curs[conv.From]
 	to, ok2 := curs[conv.To]
 	if !ok1 || !ok2 {
-		usecase.WriteError(res, http.StatusBadRequest, "не найдена исходная или целевая валюта")
+		usecase.WriteError(res, http.StatusBadRequest, "the source or target currency was not found.")
 		return
 	}
 
 	if from.Rate <= 0 || to.Rate <= 0 {
-		usecase.WriteError(res, http.StatusBadRequest, "курсы дллжны быть положительными")
+		usecase.WriteError(res, http.StatusBadRequest, "the rate should be > 0")
 		return
 	}
 	result := conv.Amount * (to.Rate / from.Rate)

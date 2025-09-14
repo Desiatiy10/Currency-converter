@@ -1,8 +1,758 @@
 {
+  "CURB": {
+    "code": "CURB",
+    "rate": 1.1,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURC": {
+    "code": "CURC",
+    "rate": 2.2,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURD": {
+    "code": "CURD",
+    "rate": 3.3000000000000003,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURE": {
+    "code": "CURE",
+    "rate": 4.4,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURF": {
+    "code": "CURF",
+    "rate": 5.5,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURG": {
+    "code": "CURG",
+    "rate": 6.6000000000000005,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURH": {
+    "code": "CURH",
+    "rate": 7.700000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURI": {
+    "code": "CURI",
+    "rate": 8.8,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURJ": {
+    "code": "CURJ",
+    "rate": 9.9,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURK": {
+    "code": "CURK",
+    "rate": 11,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURL": {
+    "code": "CURL",
+    "rate": 12.100000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURM": {
+    "code": "CURM",
+    "rate": 13.200000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURN": {
+    "code": "CURN",
+    "rate": 14.3,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURO": {
+    "code": "CURO",
+    "rate": 15.400000000000002,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURP": {
+    "code": "CURP",
+    "rate": 16.5,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURQ": {
+    "code": "CURQ",
+    "rate": 17.6,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURR": {
+    "code": "CURR",
+    "rate": 18.700000000000003,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURS": {
+    "code": "CURS",
+    "rate": 19.8,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURT": {
+    "code": "CURT",
+    "rate": 20.900000000000002,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURU": {
+    "code": "CURU",
+    "rate": 22,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURV": {
+    "code": "CURV",
+    "rate": 23.1,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURW": {
+    "code": "CURW",
+    "rate": 24.200000000000003,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURX": {
+    "code": "CURX",
+    "rate": 25.3,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURY": {
+    "code": "CURY",
+    "rate": 26.400000000000002,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURZ": {
+    "code": "CURZ",
+    "rate": 27.500000000000004,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR[": {
+    "code": "CUR[",
+    "rate": 28.6,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR\\": {
+    "code": "CUR\\",
+    "rate": 29.700000000000003,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR]": {
+    "code": "CUR]",
+    "rate": 30.800000000000004,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR^": {
+    "code": "CUR^",
+    "rate": 31.900000000000002,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR_": {
+    "code": "CUR_",
+    "rate": 33,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR`": {
+    "code": "CUR`",
+    "rate": 34.1,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURa": {
+    "code": "CURa",
+    "rate": 35.2,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURb": {
+    "code": "CURb",
+    "rate": 36.300000000000004,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURc": {
+    "code": "CURc",
+    "rate": 37.400000000000006,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURd": {
+    "code": "CURd",
+    "rate": 38.5,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURe": {
+    "code": "CURe",
+    "rate": 39.6,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURf": {
+    "code": "CURf",
+    "rate": 40.7,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURg": {
+    "code": "CURg",
+    "rate": 41.800000000000004,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURh": {
+    "code": "CURh",
+    "rate": 42.900000000000006,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURi": {
+    "code": "CURi",
+    "rate": 44,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURj": {
+    "code": "CURj",
+    "rate": 45.1,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURk": {
+    "code": "CURk",
+    "rate": 46.2,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURl": {
+    "code": "CURl",
+    "rate": 47.300000000000004,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURm": {
+    "code": "CURm",
+    "rate": 48.400000000000006,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURn": {
+    "code": "CURn",
+    "rate": 49.50000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURo": {
+    "code": "CURo",
+    "rate": 50.6,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURp": {
+    "code": "CURp",
+    "rate": 51.7,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURq": {
+    "code": "CURq",
+    "rate": 52.800000000000004,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURr": {
+    "code": "CURr",
+    "rate": 53.900000000000006,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURs": {
+    "code": "CURs",
+    "rate": 55.00000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURt": {
+    "code": "CURt",
+    "rate": 56.1,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURu": {
+    "code": "CURu",
+    "rate": 57.2,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURv": {
+    "code": "CURv",
+    "rate": 58.300000000000004,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURw": {
+    "code": "CURw",
+    "rate": 59.400000000000006,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURx": {
+    "code": "CURx",
+    "rate": 60.50000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURy": {
+    "code": "CURy",
+    "rate": 61.60000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURz": {
+    "code": "CURz",
+    "rate": 62.7,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR{": {
+    "code": "CUR{",
+    "rate": 63.800000000000004,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR|": {
+    "code": "CUR|",
+    "rate": 64.9,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR}": {
+    "code": "CUR}",
+    "rate": 66,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR~": {
+    "code": "CUR~",
+    "rate": 67.10000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 68.2,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 69.30000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 70.4,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 71.5,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 72.60000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 73.7,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 74.80000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 75.9,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 77,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 78.10000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 79.2,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 80.30000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 81.4,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 82.5,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 83.60000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 84.7,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 85.80000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 86.9,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 88,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 89.10000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 90.2,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 91.30000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 92.4,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 93.50000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 94.60000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 95.7,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 96.80000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 97.9,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 99.00000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 100.10000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 101.2,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 102.30000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR": {
+    "code": "CUR",
+    "rate": 103.4,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR ": {
+    "code": "CUR ",
+    "rate": 104.50000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR¡": {
+    "code": "CUR¡",
+    "rate": 105.60000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR¢": {
+    "code": "CUR¢",
+    "rate": 106.7,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR£": {
+    "code": "CUR£",
+    "rate": 107.80000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR¤": {
+    "code": "CUR¤",
+    "rate": 108.9,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR¥": {
+    "code": "CUR¥",
+    "rate": 110.00000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR¦": {
+    "code": "CUR¦",
+    "rate": 111.10000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR§": {
+    "code": "CUR§",
+    "rate": 112.2,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR¨": {
+    "code": "CUR¨",
+    "rate": 113.30000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR©": {
+    "code": "CUR©",
+    "rate": 114.4,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURª": {
+    "code": "CURª",
+    "rate": 115.50000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR«": {
+    "code": "CUR«",
+    "rate": 116.60000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR¬": {
+    "code": "CUR¬",
+    "rate": 117.7,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR­": {
+    "code": "CUR­",
+    "rate": 118.80000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR®": {
+    "code": "CUR®",
+    "rate": 119.9,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR¯": {
+    "code": "CUR¯",
+    "rate": 121.00000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR°": {
+    "code": "CUR°",
+    "rate": 122.10000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR±": {
+    "code": "CUR±",
+    "rate": 123.20000000000002,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR²": {
+    "code": "CUR²",
+    "rate": 124.30000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR³": {
+    "code": "CUR³",
+    "rate": 125.4,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR´": {
+    "code": "CUR´",
+    "rate": 126.50000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURµ": {
+    "code": "CURµ",
+    "rate": 127.60000000000001,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR¶": {
+    "code": "CUR¶",
+    "rate": 128.70000000000002,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR·": {
+    "code": "CUR·",
+    "rate": 129.8,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR¸": {
+    "code": "CUR¸",
+    "rate": 130.9,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR¹": {
+    "code": "CUR¹",
+    "rate": 132,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CURº": {
+    "code": "CURº",
+    "rate": 133.10000000000002,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR»": {
+    "code": "CUR»",
+    "rate": 134.20000000000002,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR¼": {
+    "code": "CUR¼",
+    "rate": 135.3,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR½": {
+    "code": "CUR½",
+    "rate": 136.4,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
+  "CUR¾": {
+    "code": "CUR¾",
+    "rate": 137.5,
+    "name": "TestCurrency",
+    "symbol": "$"
+  },
   "EUR": {
     "code": "EUR",
     "rate": 0.95,
-    "name": "Euro (updated)",
+    "name": "Euro",
     "symbol": "€"
   },
   "GBP": {

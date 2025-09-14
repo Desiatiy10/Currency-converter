@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v6.32.0
-// source: entitis.proto
+// source: entities.proto
 
 package proto
 
@@ -32,10 +32,10 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CurrencyServiceClient interface {
 	CreateCurrency(ctx context.Context, in *CreateCurrencyRequest, opts ...grpc.CallOption) (*Currency, error)
-	GetCurrency(ctx context.Context, in *GetCurrencyRequest, opts ...grpc.CallOption) (*Currency, error)
-	UpdateCurrency(ctx context.Context, in *UpdateCurrencyRequest, opts ...grpc.CallOption) (*Currency, error)
-	DeleteCurrency(ctx context.Context, in *DeleteCurrencyRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ListCurrencies(ctx context.Context, in *ListCurrenciesRequest, opts ...grpc.CallOption) (*ListCurrenciesResponse, error)
+	GetCurrency(ctx context.Context, in *Currency, opts ...grpc.CallOption) (*Currency, error)
+	UpdateCurrency(ctx context.Context, in *Currency, opts ...grpc.CallOption) (*Currency, error)
+	DeleteCurrency(ctx context.Context, in *Currency, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ListCurrencies(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListCurrenciesResponse, error)
 }
 
 type currencyServiceClient struct {
@@ -56,7 +56,7 @@ func (c *currencyServiceClient) CreateCurrency(ctx context.Context, in *CreateCu
 	return out, nil
 }
 
-func (c *currencyServiceClient) GetCurrency(ctx context.Context, in *GetCurrencyRequest, opts ...grpc.CallOption) (*Currency, error) {
+func (c *currencyServiceClient) GetCurrency(ctx context.Context, in *Currency, opts ...grpc.CallOption) (*Currency, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Currency)
 	err := c.cc.Invoke(ctx, CurrencyService_GetCurrency_FullMethodName, in, out, cOpts...)
@@ -66,7 +66,7 @@ func (c *currencyServiceClient) GetCurrency(ctx context.Context, in *GetCurrency
 	return out, nil
 }
 
-func (c *currencyServiceClient) UpdateCurrency(ctx context.Context, in *UpdateCurrencyRequest, opts ...grpc.CallOption) (*Currency, error) {
+func (c *currencyServiceClient) UpdateCurrency(ctx context.Context, in *Currency, opts ...grpc.CallOption) (*Currency, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Currency)
 	err := c.cc.Invoke(ctx, CurrencyService_UpdateCurrency_FullMethodName, in, out, cOpts...)
@@ -76,7 +76,7 @@ func (c *currencyServiceClient) UpdateCurrency(ctx context.Context, in *UpdateCu
 	return out, nil
 }
 
-func (c *currencyServiceClient) DeleteCurrency(ctx context.Context, in *DeleteCurrencyRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *currencyServiceClient) DeleteCurrency(ctx context.Context, in *Currency, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, CurrencyService_DeleteCurrency_FullMethodName, in, out, cOpts...)
@@ -86,7 +86,7 @@ func (c *currencyServiceClient) DeleteCurrency(ctx context.Context, in *DeleteCu
 	return out, nil
 }
 
-func (c *currencyServiceClient) ListCurrencies(ctx context.Context, in *ListCurrenciesRequest, opts ...grpc.CallOption) (*ListCurrenciesResponse, error) {
+func (c *currencyServiceClient) ListCurrencies(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListCurrenciesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListCurrenciesResponse)
 	err := c.cc.Invoke(ctx, CurrencyService_ListCurrencies_FullMethodName, in, out, cOpts...)
@@ -101,10 +101,10 @@ func (c *currencyServiceClient) ListCurrencies(ctx context.Context, in *ListCurr
 // for forward compatibility.
 type CurrencyServiceServer interface {
 	CreateCurrency(context.Context, *CreateCurrencyRequest) (*Currency, error)
-	GetCurrency(context.Context, *GetCurrencyRequest) (*Currency, error)
-	UpdateCurrency(context.Context, *UpdateCurrencyRequest) (*Currency, error)
-	DeleteCurrency(context.Context, *DeleteCurrencyRequest) (*emptypb.Empty, error)
-	ListCurrencies(context.Context, *ListCurrenciesRequest) (*ListCurrenciesResponse, error)
+	GetCurrency(context.Context, *Currency) (*Currency, error)
+	UpdateCurrency(context.Context, *Currency) (*Currency, error)
+	DeleteCurrency(context.Context, *Currency) (*emptypb.Empty, error)
+	ListCurrencies(context.Context, *emptypb.Empty) (*ListCurrenciesResponse, error)
 	mustEmbedUnimplementedCurrencyServiceServer()
 }
 
@@ -118,16 +118,16 @@ type UnimplementedCurrencyServiceServer struct{}
 func (UnimplementedCurrencyServiceServer) CreateCurrency(context.Context, *CreateCurrencyRequest) (*Currency, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateCurrency not implemented")
 }
-func (UnimplementedCurrencyServiceServer) GetCurrency(context.Context, *GetCurrencyRequest) (*Currency, error) {
+func (UnimplementedCurrencyServiceServer) GetCurrency(context.Context, *Currency) (*Currency, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCurrency not implemented")
 }
-func (UnimplementedCurrencyServiceServer) UpdateCurrency(context.Context, *UpdateCurrencyRequest) (*Currency, error) {
+func (UnimplementedCurrencyServiceServer) UpdateCurrency(context.Context, *Currency) (*Currency, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateCurrency not implemented")
 }
-func (UnimplementedCurrencyServiceServer) DeleteCurrency(context.Context, *DeleteCurrencyRequest) (*emptypb.Empty, error) {
+func (UnimplementedCurrencyServiceServer) DeleteCurrency(context.Context, *Currency) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteCurrency not implemented")
 }
-func (UnimplementedCurrencyServiceServer) ListCurrencies(context.Context, *ListCurrenciesRequest) (*ListCurrenciesResponse, error) {
+func (UnimplementedCurrencyServiceServer) ListCurrencies(context.Context, *emptypb.Empty) (*ListCurrenciesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListCurrencies not implemented")
 }
 func (UnimplementedCurrencyServiceServer) mustEmbedUnimplementedCurrencyServiceServer() {}
@@ -170,7 +170,7 @@ func _CurrencyService_CreateCurrency_Handler(srv interface{}, ctx context.Contex
 }
 
 func _CurrencyService_GetCurrency_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetCurrencyRequest)
+	in := new(Currency)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -182,13 +182,13 @@ func _CurrencyService_GetCurrency_Handler(srv interface{}, ctx context.Context, 
 		FullMethod: CurrencyService_GetCurrency_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CurrencyServiceServer).GetCurrency(ctx, req.(*GetCurrencyRequest))
+		return srv.(CurrencyServiceServer).GetCurrency(ctx, req.(*Currency))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _CurrencyService_UpdateCurrency_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateCurrencyRequest)
+	in := new(Currency)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -200,13 +200,13 @@ func _CurrencyService_UpdateCurrency_Handler(srv interface{}, ctx context.Contex
 		FullMethod: CurrencyService_UpdateCurrency_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CurrencyServiceServer).UpdateCurrency(ctx, req.(*UpdateCurrencyRequest))
+		return srv.(CurrencyServiceServer).UpdateCurrency(ctx, req.(*Currency))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _CurrencyService_DeleteCurrency_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteCurrencyRequest)
+	in := new(Currency)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -218,13 +218,13 @@ func _CurrencyService_DeleteCurrency_Handler(srv interface{}, ctx context.Contex
 		FullMethod: CurrencyService_DeleteCurrency_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CurrencyServiceServer).DeleteCurrency(ctx, req.(*DeleteCurrencyRequest))
+		return srv.(CurrencyServiceServer).DeleteCurrency(ctx, req.(*Currency))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _CurrencyService_ListCurrencies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListCurrenciesRequest)
+	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -236,7 +236,7 @@ func _CurrencyService_ListCurrencies_Handler(srv interface{}, ctx context.Contex
 		FullMethod: CurrencyService_ListCurrencies_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CurrencyServiceServer).ListCurrencies(ctx, req.(*ListCurrenciesRequest))
+		return srv.(CurrencyServiceServer).ListCurrencies(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -270,7 +270,7 @@ var CurrencyService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "entitis.proto",
+	Metadata: "entities.proto",
 }
 
 const (
@@ -283,7 +283,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ConversionServiceClient interface {
 	CreateConversion(ctx context.Context, in *CreateConversionRequest, opts ...grpc.CallOption) (*Conversion, error)
-	ListConversions(ctx context.Context, in *ListConversionsRequest, opts ...grpc.CallOption) (*ListConversionsResponse, error)
+	ListConversions(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListConversionsResponse, error)
 }
 
 type conversionServiceClient struct {
@@ -304,7 +304,7 @@ func (c *conversionServiceClient) CreateConversion(ctx context.Context, in *Crea
 	return out, nil
 }
 
-func (c *conversionServiceClient) ListConversions(ctx context.Context, in *ListConversionsRequest, opts ...grpc.CallOption) (*ListConversionsResponse, error) {
+func (c *conversionServiceClient) ListConversions(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListConversionsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListConversionsResponse)
 	err := c.cc.Invoke(ctx, ConversionService_ListConversions_FullMethodName, in, out, cOpts...)
@@ -319,7 +319,7 @@ func (c *conversionServiceClient) ListConversions(ctx context.Context, in *ListC
 // for forward compatibility.
 type ConversionServiceServer interface {
 	CreateConversion(context.Context, *CreateConversionRequest) (*Conversion, error)
-	ListConversions(context.Context, *ListConversionsRequest) (*ListConversionsResponse, error)
+	ListConversions(context.Context, *emptypb.Empty) (*ListConversionsResponse, error)
 	mustEmbedUnimplementedConversionServiceServer()
 }
 
@@ -333,7 +333,7 @@ type UnimplementedConversionServiceServer struct{}
 func (UnimplementedConversionServiceServer) CreateConversion(context.Context, *CreateConversionRequest) (*Conversion, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateConversion not implemented")
 }
-func (UnimplementedConversionServiceServer) ListConversions(context.Context, *ListConversionsRequest) (*ListConversionsResponse, error) {
+func (UnimplementedConversionServiceServer) ListConversions(context.Context, *emptypb.Empty) (*ListConversionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListConversions not implemented")
 }
 func (UnimplementedConversionServiceServer) mustEmbedUnimplementedConversionServiceServer() {}
@@ -376,7 +376,7 @@ func _ConversionService_CreateConversion_Handler(srv interface{}, ctx context.Co
 }
 
 func _ConversionService_ListConversions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListConversionsRequest)
+	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -388,7 +388,7 @@ func _ConversionService_ListConversions_Handler(srv interface{}, ctx context.Con
 		FullMethod: ConversionService_ListConversions_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConversionServiceServer).ListConversions(ctx, req.(*ListConversionsRequest))
+		return srv.(ConversionServiceServer).ListConversions(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -410,5 +410,5 @@ var ConversionService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "entitis.proto",
+	Metadata: "entities.proto",
 }

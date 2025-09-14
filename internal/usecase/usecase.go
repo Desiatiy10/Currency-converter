@@ -12,7 +12,7 @@ func WriteJson(res http.ResponseWriter, status int, data any) error {
 
 	encoder := json.NewEncoder(res)
 	if err := encoder.Encode(data); err != nil {
-		log.Printf("Ошибка при кодировании JSON: %v", err)
+		log.Printf("coding error  JSON: %v", err)
 		return err
 	}
 	return nil

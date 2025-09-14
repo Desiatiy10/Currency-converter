@@ -9,12 +9,13 @@ import (
 	pb "currency-converter/proto"
 
 	"google.golang.org/grpc"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 func main() {
 	conn, err := grpc.Dial("localhost:9090", grpc.WithInsecure())
 	if err != nil {
-		log.Fatalf("не удалось подключиться: %v", err)
+		log.Fatalf("failed connection: %v", err)
 	}
 	defer conn.Close()
 
@@ -33,45 +34,43 @@ func main() {
 		},
 	})
 	if err != nil {
-		log.Fatalf("ошибка CreateCurrency: %v", err)
+		log.Fatalf("error CreateCurrency: %v", err)
 	}
 	fmt.Println("Создана валюта:", usd)
 
-	got, err := client.GetCurrency(ctx, &pb.GetCurrencyRequest{Code: "USD"})
+	got, err := client.GetCurrency(ctx, &pb.Currency{Code: "USD"})
 	if err != nil {
-		log.Fatalf("ошибка GetCurrency: %v", err)
+		log.Fatalf("error GetCurrency: %v", err)
 	}
 	fmt.Println("Получена валюта:", got)
 
-	updated, err := client.UpdateCurrency(ctx, &pb.UpdateCurrencyRequest{
-		Currency: &pb.Currency{
-			Code:   "USD",
-			Rate:   13121991,
-			Name:   "(-_-)",
-			Symbol: "$",
-		},
+	updated, err := client.UpdateCurrency(ctx, &pb.Currency{
+		Code:   "USD",
+		Rate:   13121991,
+		Name:   "(-_-)",
+		Symbol: "$",
 	})
 	if err != nil {
-		log.Fatalf("ошибка UpdateCurrency: %v", err)
+		log.Fatalf("error UpdateCurrency: %v", err)
 	}
 	fmt.Println("Обновлённая валюта:", updated)
 
-	list, err := client.ListCurrencies(ctx, &pb.ListCurrenciesRequest{})
+	list, err := client.ListCurrencies(ctx, &emptypb.Empty{})
 	if err != nil {
-		log.Fatalf("ошибка ListCurrencies: %v", err)
+		log.Fatalf("error ListCurrencies: %v", err)
 	}
 	fmt.Println("Список валют:")
 	for _, c := range list.Currencies {
 		fmt.Printf("- %s (%s): %.2f\n", c.Code, c.Name, c.Rate)
 	}
 
-	_, err = client.DeleteCurrency(ctx, &pb.DeleteCurrencyRequest{Code: "USD"})
+	_, err = client.DeleteCurrency(ctx, &pb.Currency{Code: "USD"})
 	if err != nil {
-		log.Fatalf("ошибка DeleteCurrency: %v", err)
+		log.Fatalf("error DeleteCurrency: %v", err)
 	}
 	fmt.Println("USD удалена")
 
-	list2, _ := client.ListCurrencies(ctx, &pb.ListCurrenciesRequest{})
+	list2, _ := client.ListCurrencies(ctx, &emptypb.Empty{})
 	fmt.Println("Список валют после удаления:", list2.Currencies)
 
 	// Тесты для конверсий
@@ -88,18 +87,18 @@ func main() {
 
 	conv, err := convClient.CreateConversion(ctx, &pb.CreateConversionRequest{
 		Amount: 100,
-		From:   "USD",
-		To:     "EUR",
+		From:   "CURB",
+		To:     "CURC",
 	})
 	if err != nil {
-		log.Fatalf("ошибка CreateConversion: %v", err)
+		log.Fatalf("error CreateConversion: %v", err)
 	}
 	fmt.Printf("Конвертация: %.2f %s = %.2f %s\n",
 		conv.Amount, conv.From.Code, conv.Result, conv.To.Code)
 
-	convList, err := convClient.ListConversions(ctx, &pb.ListConversionsRequest{})
+	convList, err := convClient.ListConversions(ctx, &emptypb.Empty{})
 	if err != nil {
-		log.Fatalf("ошибка ListConversions: %v", err)
+		log.Fatalf("error ListConversions: %v", err)
 	}
 	fmt.Println("История конверсий:")
 	for _, c := range convList.Conversions {

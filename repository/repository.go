@@ -32,12 +32,12 @@ func Store(e model.Entity) {
 	case *model.Currency:
 		currencies[v.Code] = v //(код валюты как ключ)
 		if err := SaveCurToFile(); err != nil {
-			log.Println("ошибка сохранения валют:", err)
+			log.Println("error saving currencies:", err)
 		}
 	case *model.Conversion:
 		conversions = append(conversions, v)
 		if err := SaveConvToFile(); err != nil {
-			log.Println("ошибка сохранения конвертаций:", err)
+			log.Println("error saving conversions:", err)
 		}
 	}
 }
@@ -46,10 +46,10 @@ func Store(e model.Entity) {
 func SaveCurToFile() error {
 	data, err := json.MarshalIndent(currencies, "", "  ")
 	if err != nil {
-		return fmt.Errorf("ошибка маршалинга валюты: %w", err)
+		return fmt.Errorf("error marshaling currencies: %w", err)
 	}
 	if err := os.WriteFile(currencyFile, data, 0644); err != nil {
-		return fmt.Errorf("ошибка записи файла валют: %w", err)
+		return fmt.Errorf("error writing the currencys file: %w", err)
 	}
 	return nil
 }
@@ -58,10 +58,10 @@ func SaveCurToFile() error {
 func SaveConvToFile() error {
 	data, err := json.MarshalIndent(conversions, "", "  ")
 	if err != nil {
-		return fmt.Errorf("ошибка маршалинга конвертаций %w", err)
+		return fmt.Errorf("error marshaling conversions: %w", err)
 	}
 	if err := os.WriteFile(conversionFile, data, 0644); err != nil {
-		return fmt.Errorf("ошибка записи файла конвертаций %w", err)
+		return fmt.Errorf("error writing the conversions file: %w", err)
 	}
 	return nil
 }
@@ -70,13 +70,13 @@ func SaveConvToFile() error {
 func LoadCurrenciesFromFile() error {
 	fileData, err := os.ReadFile(currencyFile)
 	if err != nil {
-		return fmt.Errorf("ошибка чтения файла валют %w", err)
+		return fmt.Errorf("error reading the currencys file: %w", err)
 	}
 
 	mu.Lock()
 	defer mu.Unlock()
 	if err := json.Unmarshal(fileData, &currencies); err != nil {
-		return fmt.Errorf("ошибка анмаршалинга валют: %w", err)
+		return fmt.Errorf("error unmarshaling the currencys file: %w", err)
 	}
 
 	return nil
@@ -86,14 +86,14 @@ func LoadCurrenciesFromFile() error {
 func LoadConversionsFromFile() error {
 	fileData, err := os.ReadFile(conversionFile)
 	if err != nil {
-		return fmt.Errorf("ошибка чтения файла конвертаций: %w", err)
+		return fmt.Errorf("error reading the conversions file: %w", err)
 	}
 
 	mu.Lock()
 	defer mu.Unlock()
 	if err := json.Unmarshal(fileData, &conversions); err != nil {
 		//При первом запуске будет ошибка, т.к. json пуст
-		return fmt.Errorf("ошибка анмаршалинга конвертаций: %w", err)
+		return fmt.Errorf("error unmarshaling the conversions file: %w", err)
 	}
 
 	return nil
@@ -105,7 +105,7 @@ func DeleteCurFromMap(code string) error {
 	defer mu.Unlock()
 
 	if _, ok := currencies[code]; !ok {
-		return fmt.Errorf("валюта не найдена")
+		return fmt.Errorf("the currency %s not found", code)
 	}
 	delete(currencies, code)
 	return SaveCurToFile()
@@ -117,7 +117,7 @@ func UpdateCurInMap(cur *model.Currency) error {
 	defer mu.Unlock()
 
 	if _, ok := currencies[cur.Code]; !ok {
-		return fmt.Errorf("валюта %s не найдена", cur.Code)
+		return fmt.Errorf("the currency %s not found", cur.Code)
 	}
 	currencies[cur.Code] = cur
 	return SaveCurToFile()
