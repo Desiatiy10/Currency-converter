@@ -9,186 +9,42 @@
     },
     "to": {
       "code": "EUR",
-      "rate": 1.2,
-      "name": "Euro",
+      "rate": 0.95,
+      "name": "Euro (updated)",
       "symbol": "€"
     },
-    "result": 120
+    "result": 95
   },
   {
     "amount": 100,
     "from": {
-      "code": "USD",
-      "rate": 1,
-      "name": "US Dollar",
+      "code": "CURC",
+      "rate": 2.2,
+      "name": "TestCurrency",
       "symbol": "$"
     },
     "to": {
-      "code": "EUR",
-      "rate": 1.2,
-      "name": "Euro",
-      "symbol": "€"
+      "code": "CURC",
+      "rate": 2.2,
+      "name": "TestCurrency",
+      "symbol": "$"
     },
-    "result": 120
+    "result": 100
   },
   {
     "amount": 100,
     "from": {
-      "code": "USD",
-      "rate": 1,
-      "name": "US Dollar",
+      "code": "CURB",
+      "rate": 1.1,
+      "name": "TestCurrency",
       "symbol": "$"
     },
     "to": {
-      "code": "EUR",
-      "rate": 1.2,
-      "name": "Euro",
-      "symbol": "€"
-    },
-    "result": 120
-  },
-  {
-    "amount": 100,
-    "from": {
-      "code": "USD",
-      "rate": 1,
-      "name": "US Dollar",
+      "code": "CURC",
+      "rate": 2.2,
+      "name": "TestCurrency",
       "symbol": "$"
     },
-    "to": {
-      "code": "EUR",
-      "rate": 1.2,
-      "name": "Euro",
-      "symbol": "€"
-    },
-    "result": 120
-  },
-  {
-    "amount": 100,
-    "from": {
-      "code": "USD",
-      "rate": 1,
-      "name": "US Dollar",
-      "symbol": "$"
-    },
-    "to": {
-      "code": "EUR",
-      "rate": 1.2,
-      "name": "Euro",
-      "symbol": "€"
-    },
-    "result": 120
-  },
-  {
-    "amount": 100,
-    "from": {
-      "code": "USD",
-      "rate": 1,
-      "name": "US Dollar",
-      "symbol": "$"
-    },
-    "to": {
-      "code": "EUR",
-      "rate": 1.2,
-      "name": "Euro",
-      "symbol": "€"
-    },
-    "result": 120
-  },
-  {
-    "amount": 100,
-    "from": {
-      "code": "USD",
-      "rate": 1,
-      "name": "US Dollar",
-      "symbol": "$"
-    },
-    "to": {
-      "code": "EUR",
-      "rate": 1.2,
-      "name": "Euro",
-      "symbol": "€"
-    },
-    "result": 120
-  },
-  {
-    "amount": 100,
-    "from": {
-      "code": "USD",
-      "rate": 1,
-      "name": "US Dollar",
-      "symbol": "$"
-    },
-    "to": {
-      "code": "EUR",
-      "rate": 1.2,
-      "name": "Euro",
-      "symbol": "€"
-    },
-    "result": 120
-  },
-  {
-    "amount": 100,
-    "from": {
-      "code": "USD",
-      "rate": 75.5,
-      "name": "Доллар США",
-      "symbol": "$"
-    },
-    "to": {
-      "code": "EUR",
-      "rate": 1.2,
-      "name": "Euro",
-      "symbol": "€"
-    },
-    "result": 1.5894039735099337
-  },
-  {
-    "amount": 100,
-    "from": {
-      "code": "USD",
-      "rate": 1,
-      "name": "US Dollar",
-      "symbol": "$"
-    },
-    "to": {
-      "code": "EUR",
-      "rate": 1.2,
-      "name": "Euro",
-      "symbol": "€"
-    },
-    "result": 120
-  },
-  {
-    "amount": 0.666,
-    "from": {
-      "code": "Тест",
-      "rate": 200,
-      "name": "Измененный Тест",
-      "symbol": "%"
-    },
-    "to": {
-      "code": "USDevil",
-      "rate": 10000,
-      "name": "testUPD",
-      "symbol": "ээ"
-    },
-    "result": 33.300000000000004
-  },
-  {
-    "amount": 0.666,
-    "from": {
-      "code": "Тест",
-      "rate": 200,
-      "name": "Измененный Тест",
-      "symbol": "%"
-    },
-    "to": {
-      "code": "USDevil",
-      "rate": 10000,
-      "name": "testUPD",
-      "symbol": "ээ"
-    },
-    "result": 33.300000000000004
+    "result": 200
   }
 ]

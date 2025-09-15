@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package CurrencyConverter;
+
+option go_package = "currency-converter/internal/proto;proto";
+
+import "google/protobuf/empty.proto";
+
+message Currency {
+    string code   = 1;
+    double rate   = 2;
+    string name   = 3;
+    string symbol = 4;
+}
+
+message Conversion {
+    double amount = 1;  
+    Currency from = 2;
+    Currency to   = 3;
+    double result = 4;
+    }
+
+// --- Запросы/ответы для валют ---
+
+message CreateCurrencyRequest {  
+    Currency currency = 1;
+}
+
+message ListCurrenciesResponse {
+    repeated Currency currencies = 1;
+}
+
+// --- Сервисы для валют ---
+
+service CurrencyService {
+    rpc CreateCurrency(CreateCurrencyRequest) returns (Currency);
+    rpc GetCurrency(Currency)       returns (Currency);
+    rpc UpdateCurrency(Currency) returns (Currency);
+    rpc DeleteCurrency(Currency) returns (google.protobuf.Empty);
+    rpc ListCurrencies(google.protobuf.Empty) returns (ListCurrenciesResponse);
+}
+
+// --- Запросы/ответы для конверсий ---
+
+message CreateConversionRequest {
+    double amount = 1;
+    string from   = 2;
+    string to     = 3;  
+}
+
+message ListConversionsResponse {
+    repeated Conversion conversions = 1;
+}
+
+// --- Сервисы для конверсий ---
+
+service ConversionService {
+    rpc CreateConversion(CreateConversionRequest) returns (Conversion);
+    rpc ListConversions(google.protobuf.Empty)    returns (ListConversionsResponse);
+}

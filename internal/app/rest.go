@@ -1,4 +1,4 @@
-package router
+package app
 
 import (
 	"context"
@@ -36,7 +36,7 @@ func New(addr string) *Server {
 }
 
 func (s *Server) Start() error {
-	log.Println("Сервер запущен на ", s.httpServer.Addr)
+	log.Println("Сервер запущен на: ", s.httpServer.Addr)
 	return s.httpServer.ListenAndServe()
 }
 
