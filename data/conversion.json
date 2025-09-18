@@ -46,5 +46,37 @@
       "symbol": "$"
     },
     "result": 200
+  },
+  {
+    "amount": 100,
+    "from": {
+      "code": "USD",
+      "rate": 1,
+      "name": "Dollar",
+      "symbol": "$"
+    },
+    "to": {
+      "code": "EUR",
+      "rate": 0.95,
+      "name": "Euro (updated)",
+      "symbol": "€"
+    },
+    "result": 105.26315789473685
+  },
+  {
+    "amount": 100,
+    "from": {
+      "code": "USDevil",
+      "rate": 10000,
+      "name": "testUPD",
+      "symbol": "ээ"
+    },
+    "to": {
+      "code": "EUR",
+      "rate": 1.05,
+      "name": "US Dollar",
+      "symbol": "$"
+    },
+    "result": 0.009523809523809525
   }
 ]
