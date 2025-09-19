@@ -11,19 +11,21 @@ import (
 
 type Server struct {
 	httpServer *http.Server
+	curHandler *handler.CurrencyHandler
+	convHandler *handler.ConversionHandler
 }
 
-func New(addr string) *Server {
+func New(addr string, curHand *handler.CurrencyHandler, convHand *handler.ConversionHandler) *Server {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("POST /currency", handler.CreateCurrency)
-	mux.HandleFunc("GET /currency/{code}", handler.GetCurrency)
-	mux.HandleFunc("GET /currencies", handler.ListCurrencies)
-	mux.HandleFunc("PUT /currency/{code}", handler.UpdateCurrency)
-	mux.HandleFunc("DELETE /currency/{code}", handler.DeleteCurrency)
+	mux.HandleFunc("POST /currency", curHand.CreateCurrency)
+	mux.HandleFunc("GET /currency/{code}", curHand.GetCurrency)
+	mux.HandleFunc("GET /currencies", curHand.ListCurrencies)
+	mux.HandleFunc("PUT /currency/{code}", curHand.UpdateCurrency)
+	mux.HandleFunc("DELETE /currency/{code}", curHand.DeleteCurrency)
 
-	mux.HandleFunc("POST /conversion", handler.CreateConversion)
-	mux.HandleFunc("GET /conversions", handler.ListConversions)
+	mux.HandleFunc("POST /conversion", convHand.CreateConversion)
+	mux.HandleFunc("GET /conversions", convHand.ListConversions)
 
 	mux.Handle("/swagger/", httpSwagger.WrapHandler)
 
@@ -32,15 +34,17 @@ func New(addr string) *Server {
 			Addr:    addr,
 			Handler: mux,
 		},
+		curHandler: curHand,
+		convHandler: convHand,
 	}
 }
 
 func (s *Server) Start() error {
-	log.Println("Сервер запущен на: ", s.httpServer.Addr)
+	log.Println("REST server starting on: ", s.httpServer.Addr)
 	return s.httpServer.ListenAndServe()
 }
 
 func (s *Server) Stop(ctx context.Context) error {
-	log.Println("Остановка сервера...")
+	log.Println("Initiating server shutdown...")
 	return s.httpServer.Shutdown(ctx)
 }

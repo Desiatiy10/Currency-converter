@@ -2,20 +2,20 @@ package main
 
 import (
 	_ "currency-converter/docs"
-	router "currency-converter/internal/app"
-	grpc_server "currency-converter/internal/grpc"
+	"currency-converter/internal/app"
+	"currency-converter/internal/handler"
+	"currency-converter/internal/repository"
+	"currency-converter/internal/service"
 	"currency-converter/proto"
-	"currency-converter/repository"
-	"currency-converter/service"
-	"log"
-	"net"
-	"time"
 
 	"context"
 	"fmt"
+	"log"
+	"net"
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"google.golang.org/grpc"
 )
@@ -27,30 +27,38 @@ import (
 // @BasePath /
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
 	signalChan := make(chan os.Signal, 1)
 	signal.Notify(signalChan, os.Interrupt, syscall.SIGTERM)
 
 	go func() {
 		sig := <-signalChan
-		fmt.Println("Получен сигнал остановки: ", sig)
+		fmt.Println("Received shutdown signal: ", sig)
 		cancel()
 	}()
 
-	if err := repository.LoadCurrenciesFromFile(); err != nil {
-		fmt.Println("error загрузки валют: ", err)
+	// Repository
+	repo := repository.NewRepository()
+	if err := repo.LoadCurrencies(); err != nil {
+		fmt.Println("Failed to load currency data: ", err)
 	}
-	if err := repository.LoadConversionsFromFile(); err != nil {
-		fmt.Println("error загрузки конверсий:", err)
+	if err := repo.LoadConversions(); err != nil {
+		fmt.Println("Failed to load conversion data:", err)
 	}
 
-	service.InitService(ctx)
+	//Service
+	srvc := service.InitService(ctx, repo)
+
+	//Handlers
+	curHandler := handler.NewCurrencyHandler(srvc)
+	convHandler := handler.NewConversionHandler(srvc)
 
 	//Запуск REST
-	srv := router.New(":8080")
+	server := app.New(":8080", curHandler, convHandler)
 	go func() {
-		if err := srv.Start(); err != nil {
-			fmt.Println("server error:", err)
+		if err := server.Start(); err != nil {
+			fmt.Println("REST API server error: ", err)
 			cancel()
 		}
 	}()
@@ -59,25 +67,30 @@ func main() {
 	go func() {
 		lis, err := net.Listen("tcp", ":9090")
 		if err != nil {
-			log.Fatalf("error to listen %v", err)
+			log.Fatalf("Failed to listen on gRPC port: %v", err)
 		}
+
 		grpcServer := grpc.NewServer()
-		proto.RegisterCurrencyServiceServer(grpcServer, &grpc_server.CurrencyServer{})
-		proto.RegisterConversionServiceServer(grpcServer, &grpc_server.ConversionServer{})
-		fmt.Println("gRPC сервер запущен на: 9090")
+
+		proto.RegisterCurrencyServiceServer(grpcServer,
+			app.NewCurrencyServer(srvc))
+		proto.RegisterConversionServiceServer(grpcServer,
+			app.NewConversionServer(srvc))
+
+		log.Println("gRPC server starting on port: 9090")
 		if err := grpcServer.Serve(lis); err != nil {
-			log.Fatalf("error run server gRPC %v", err)
+			log.Fatalf("gRPC server failed: %v", err)
 		}
 	}()
 
 	<-ctx.Done()
 
-	fmt.Println("Выключаем сервер...")
-	shutdownCtx, cancelShutdown := context.WithTimeout(context.Background(), 2*time.Second)
+	shutdownCtx, cancelShutdown := context.WithTimeout(
+		context.Background(), 2*time.Second)
 	defer cancelShutdown()
-	if err := srv.Stop(shutdownCtx); err != nil {
-		fmt.Println("stopping server error:", err)
+	if err := server.Stop(shutdownCtx); err != nil {
+		fmt.Println("Error during server shutdown:", err)
 	}
 
-	fmt.Println("Завершаем программу...")
+	fmt.Println("Application terminated successfully")
 }
