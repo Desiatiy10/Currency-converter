@@ -85,7 +85,7 @@ func (s *service) startLogging(ctx context.Context) {
 	for code := range s.repo.GetCurrencies() {
 		seen[code] = true
 	}
-	
+
 	for {
 		select {
 		case <-ctx.Done():
@@ -130,11 +130,11 @@ func (s *service) CreateCurrency(cur *model.Currency) (*model.Currency, error) {
 	if cur.Code == "" || cur.Rate <= 0 || cur.Name == "" || cur.Symbol == "" {
 		return nil, fmt.Errorf("invalid currency data: all fields must be provided and rate must be positive")
 	}
-	
+
 	if err := s.repo.Store(cur); err != nil {
 		return nil, fmt.Errorf("failed to create currency: %v", err)
 	}
-	
+
 	log.Printf("Currency created successfully: %s (%s)", cur.Code, cur.Name)
 	return cur, nil
 }
@@ -149,13 +149,13 @@ func (s *service) GetCurrency(code string) (*model.Currency, error) {
 	if code == "" {
 		return nil, fmt.Errorf("currency code cannot be empty")
 	}
-	
+
 	data := s.repo.GetCurrencies()
 	if cur, ok := data[code]; ok {
 		log.Printf("Currency found: %s", code)
 		return cur, nil
 	}
-	
+
 	return nil, fmt.Errorf("currency '%s' not found in the system", code)
 }
 
@@ -163,12 +163,12 @@ func (s *service) UpdateCurrency(cur *model.Currency) (*model.Currency, error) {
 	if cur.Code == "" {
 		return nil, fmt.Errorf("currency code is required for update")
 	}
-	
+
 	err := s.repo.UpdateCurrency(cur)
 	if err != nil {
 		return nil, fmt.Errorf("failed to update currency '%s': %v", cur.Code, err)
 	}
-	
+
 	log.Printf("Currency updated successfully: %s", cur.Code)
 	return cur, nil
 }
@@ -177,16 +177,11 @@ func (s *service) DeleteCurrency(code string) error {
 	if code == "" {
 		return fmt.Errorf("currency code cannot be empty")
 	}
-	
-	cur, _ := s.GetCurrency(code)
-	if cur == nil {
-		return fmt.Errorf("cannot delete - currency '%s' not found", code)
-	}
-	
+
 	if err := s.repo.DeleteCurrency(code); err != nil {
 		return fmt.Errorf("failed to delete currency '%s': %v", code, err)
 	}
-	
+
 	log.Printf("Currency deleted successfully: %s", code)
 	return nil
 }
@@ -207,25 +202,25 @@ func (s *service) CreateConversion(amount float64, fromCode, toCode string) (*mo
 
 	curs := s.repo.GetCurrencies()
 	from, ok1 := curs[fromCode]
-	to, ok2 := curs[toCode]
-	
 	if !ok1 {
 		return nil, fmt.Errorf("source currency '%s' not found", fromCode)
 	}
+
+	to, ok2 := curs[toCode]
 	if !ok2 {
 		return nil, fmt.Errorf("target currency '%s' not found", toCode)
 	}
 	if from.Rate <= 0 || to.Rate <= 0 {
 		return nil, fmt.Errorf("invalid exchange rates - both must be positive values")
 	}
-	
+
 	result := amount * (from.Rate / to.Rate)
 	conv := model.NewConversion(amount, from, to, result)
 
 	if err := s.repo.Store(conv); err != nil {
 		return nil, fmt.Errorf("failed to save conversion: %v", err)
 	}
-	
+
 	log.Printf("Conversion completed: %.2f %s → %.2f %s", amount, fromCode, result, toCode)
 	return conv, nil
 }

@@ -115,10 +115,6 @@ func (r *repo) LoadConversions() error {
 func (r *repo) DeleteCurrency(code string) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
-
-	if _, exists := r.currencies[code]; !exists {
-		return fmt.Errorf("currency %s not found in repository", code)
-	}
 	
 	delete(r.currencies, code)
 	return r.saveCurrenciesToFile()
