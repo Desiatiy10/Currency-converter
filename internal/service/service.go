@@ -244,7 +244,7 @@ func (s *service) CreateCurrency(cur *model.Currency) (*model.Currency, error) {
 	if cur.Code == "" || cur.Rate <= 0 || cur.Name == "" || cur.Symbol == "" {
 		return nil, fmt.Errorf("invalid currency data: all fields must be provided and rate must be positive")
 	}
-
+  
 	if err := s.AddEntity(cur); err != nil {
 		return nil, fmt.Errorf("failed to create currency: %v", err)
 	}
@@ -308,6 +308,7 @@ func (s *service) CreateConversion(nominal float64, fromCode, toCode string) (*m
 	} else if from.Rate <= 0 {
 		return nil, fmt.Errorf("invalid exchange rates - both must be positive values")
 	}
+  
 	to, ok2 := curs[toCode]
 	if !ok2 {
 		return nil, fmt.Errorf("target currency '%s' not found", toCode)
@@ -324,6 +325,6 @@ func (s *service) CreateConversion(nominal float64, fromCode, toCode string) (*m
 		return nil, fmt.Errorf("failed to save conversion: %v", err)
 	}
 
-	log.Printf("Conversion completed: %.2f %s → %.2f %s", nominal, fromCode, result, toCode)
+	log.Printf("Conversion completed: %.2f %s → %.2f %s", amount, fromCode, result, toCode)
 	return conv, nil
 }
