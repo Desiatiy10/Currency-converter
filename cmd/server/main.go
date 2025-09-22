@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "currency-converter/docs"
+	"currency-converter/internal/api/cbr"
 	"currency-converter/internal/app"
 	"currency-converter/internal/handler"
 	"currency-converter/internal/repository"
@@ -46,9 +47,11 @@ func main() {
 	if err := repo.LoadConversions(); err != nil {
 		fmt.Println("Failed to load conversion data:", err)
 	}
+	//API ЦБ РФ
+	cbrClient := cbr.NewCBRClient()
 
 	//Service
-	srvc := service.InitService(ctx, repo)
+	srvc := service.InitService(ctx, repo, cbrClient)
 
 	//Handlers
 	curHandler := handler.NewCurrencyHandler(srvc)

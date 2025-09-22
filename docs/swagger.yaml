@@ -42,9 +42,10 @@ paths:
     post:
       consumes:
       - application/json
-      description: Конвертирует валюту и сохраняет результат
+      description: Converts amount from one currency to another using current Central
+        Bank of Russia exchange rates and saves the conversion result
       parameters:
-      - description: Запрос на конвертацию
+      - description: Conversion request parameters
         in: body
         name: request
         required: true
@@ -54,53 +55,86 @@ paths:
       - application/json
       responses:
         "201":
-          description: Created
+          description: Successfully converted currency
           schema:
             $ref: '#/definitions/model.Conversion'
         "400":
-          description: Bad Request
+          description: Invalid request parameters
           schema:
             additionalProperties:
               type: string
             type: object
-      summary: Создать конвертацию
+        "404":
+          description: Currency not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "422":
+          description: Invalid conversion parameters
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Convert currency amount
       tags:
       - conversion
   /conversions:
     get:
+      description: Retrieves history of all currency conversions performed
       produces:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Successfully retrieved conversion history
           schema:
             items:
               $ref: '#/definitions/model.Conversion'
             type: array
-      summary: Получить список конвертаций
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get conversion history
       tags:
       - conversion
   /currencies:
     get:
+      description: Retrieves all currencies with current exchange rates from Central
+        Bank of Russia
       produces:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Successfully retrieved currencies map
           schema:
-            items:
+            additionalProperties:
               $ref: '#/definitions/model.Currency'
-            type: array
-      summary: Получить список валют
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get list of all available currencies
       tags:
       - currency
   /currency:
     post:
       consumes:
       - application/json
-      description: Добавляет новую валюту в хранилище
+      description: Adds a new currency to the storage
       parameters:
-      - description: Валюта
+      - description: Currency data
         in: body
         name: currency
         required: true
@@ -119,38 +153,22 @@ paths:
             additionalProperties:
               type: string
             type: object
-      summary: Создать валюту
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create currency
       tags:
       - currency
   /currency/{code}:
-    delete:
-      parameters:
-      - description: Код валюты
-        in: path
-        name: code
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "404":
-          description: Not Found
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Удалить валюту
-      tags:
-      - currency
     get:
+      description: Retrieves detailed information about specific currency including
+        exchange rate from Central Bank of Russia
       parameters:
-      - description: Код валюты
+      - description: Currency code (ISO 4217 format)
+        example: USD
         in: path
         name: code
         required: true
@@ -159,28 +177,43 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Successfully retrieved currency details
           schema:
             $ref: '#/definitions/model.Currency'
-        "404":
-          description: Not Found
+        "400":
+          description: Invalid currency code format
           schema:
             additionalProperties:
               type: string
             type: object
-      summary: Получить валюту
+        "404":
+          description: Currency not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get currency details by code
       tags:
       - currency
     put:
       consumes:
       - application/json
+      description: 'Updates the exchange rate for a specific currency. Note: Normally
+        rates are updated automatically from Central Bank of Russia'
       parameters:
-      - description: Код валюты
+      - description: Currency code to update (ISO 4217 format)
+        example: USD
         in: path
         name: code
         required: true
         type: string
-      - description: Валюта
+      - description: Currency data with updated exchange rate
         in: body
         name: currency
         required: true
@@ -190,16 +223,28 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Successfully updated currency
           schema:
             $ref: '#/definitions/model.Currency'
         "400":
-          description: Bad Request
+          description: Invalid input data or currency code mismatch
           schema:
             additionalProperties:
               type: string
             type: object
-      summary: Обновить валюту
+        "404":
+          description: Currency not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update currency exchange rate
       tags:
       - currency
 swagger: "2.0"

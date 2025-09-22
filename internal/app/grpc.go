@@ -127,18 +127,6 @@ func (s *CurrencyServer) UpdateCurrency(ctx context.Context, req *proto.Currency
 	}, nil
 }
 
-func (s *CurrencyServer) DeleteCurrency(ctx context.Context, req *proto.Currency) (*emptypb.Empty, error) {
-	if req.Code == "" {
-		return nil, status.Errorf(codes.InvalidArgument, "Currency code is required for deletion")
-	}
-	
-	if err := s.svc.DeleteCurrency(req.Code); err != nil {
-		return nil, status.Errorf(codes.NotFound, "Currency '%s' not found - cannot delete", req.Code)
-	}
-	
-	return &emptypb.Empty{}, nil
-}
-
 // *********************************Conversions*****************************************
 
 type ConversionServer struct {

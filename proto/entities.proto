@@ -36,7 +36,6 @@ service CurrencyService {
     rpc CreateCurrency(CreateCurrencyRequest) returns (Currency);
     rpc GetCurrency(Currency)       returns (Currency);
     rpc UpdateCurrency(Currency) returns (Currency);
-    rpc DeleteCurrency(Currency) returns (google.protobuf.Empty);
     rpc ListCurrencies(google.protobuf.Empty) returns (ListCurrenciesResponse);
 }
 

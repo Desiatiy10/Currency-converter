@@ -17,7 +17,7 @@ const docTemplate = `{
     "paths": {
         "/conversion": {
             "post": {
-                "description": "Конвертирует валюту и сохраняет результат",
+                "description": "Converts amount from one currency to another using current Central Bank of Russia exchange rates and saves the conversion result",
                 "consumes": [
                     "application/json"
                 ],
@@ -27,10 +27,10 @@ const docTemplate = `{
                 "tags": [
                     "conversion"
                 ],
-                "summary": "Создать конвертацию",
+                "summary": "Convert currency amount",
                 "parameters": [
                     {
-                        "description": "Запрос на конвертацию",
+                        "description": "Conversion request parameters",
                         "name": "request",
                         "in": "body",
                         "required": true,
@@ -41,13 +41,40 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created",
+                        "description": "Successfully converted currency",
                         "schema": {
                             "$ref": "#/definitions/model.Conversion"
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Invalid request parameters",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Currency not found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid conversion parameters",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": {
@@ -60,20 +87,30 @@ const docTemplate = `{
         },
         "/conversions": {
             "get": {
+                "description": "Retrieves history of all currency conversions performed",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "conversion"
                 ],
-                "summary": "Получить список конвертаций",
+                "summary": "Get conversion history",
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Successfully retrieved conversion history",
                         "schema": {
                             "type": "array",
                             "items": {
                                 "$ref": "#/definitions/model.Conversion"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
                             }
                         }
                     }
@@ -82,20 +119,30 @@ const docTemplate = `{
         },
         "/currencies": {
             "get": {
+                "description": "Retrieves all currencies with current exchange rates from Central Bank of Russia",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "currency"
                 ],
-                "summary": "Получить список валют",
+                "summary": "Get list of all available currencies",
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Successfully retrieved currencies map",
                         "schema": {
-                            "type": "array",
-                            "items": {
+                            "type": "object",
+                            "additionalProperties": {
                                 "$ref": "#/definitions/model.Currency"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
                             }
                         }
                     }
@@ -104,7 +151,7 @@ const docTemplate = `{
         },
         "/currency": {
             "post": {
-                "description": "Добавляет новую валюту в хранилище",
+                "description": "Adds a new currency to the storage",
                 "consumes": [
                     "application/json"
                 ],
@@ -114,10 +161,10 @@ const docTemplate = `{
                 "tags": [
                     "currency"
                 ],
-                "summary": "Создать валюту",
+                "summary": "Create currency",
                 "parameters": [
                     {
-                        "description": "Валюта",
+                        "description": "Currency data",
                         "name": "currency",
                         "in": "body",
                         "required": true,
@@ -141,23 +188,34 @@ const docTemplate = `{
                                 "type": "string"
                             }
                         }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
                     }
                 }
             }
         },
         "/currency/{code}": {
             "get": {
+                "description": "Retrieves detailed information about specific currency including exchange rate from Central Bank of Russia",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "currency"
                 ],
-                "summary": "Получить валюту",
+                "summary": "Get currency details by code",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Код валюты",
+                        "example": "USD",
+                        "description": "Currency code (ISO 4217 format)",
                         "name": "code",
                         "in": "path",
                         "required": true
@@ -165,13 +223,31 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Successfully retrieved currency details",
                         "schema": {
                             "$ref": "#/definitions/model.Currency"
                         }
                     },
+                    "400": {
+                        "description": "Invalid currency code format",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
                     "404": {
-                        "description": "Not Found",
+                        "description": "Currency not found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": {
@@ -182,6 +258,7 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "description": "Updates the exchange rate for a specific currency. Note: Normally rates are updated automatically from Central Bank of Russia",
                 "consumes": [
                     "application/json"
                 ],
@@ -191,17 +268,18 @@ const docTemplate = `{
                 "tags": [
                     "currency"
                 ],
-                "summary": "Обновить валюту",
+                "summary": "Update currency exchange rate",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Код валюты",
+                        "example": "USD",
+                        "description": "Currency code to update (ISO 4217 format)",
                         "name": "code",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "description": "Валюта",
+                        "description": "Currency data with updated exchange rate",
                         "name": "currency",
                         "in": "body",
                         "required": true,
@@ -212,42 +290,13 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Successfully updated currency",
                         "schema": {
                             "$ref": "#/definitions/model.Currency"
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "currency"
-                ],
-                "summary": "Удалить валюту",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Код валюты",
-                        "name": "code",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
+                        "description": "Invalid input data or currency code mismatch",
                         "schema": {
                             "type": "object",
                             "additionalProperties": {
@@ -256,7 +305,16 @@ const docTemplate = `{
                         }
                     },
                     "404": {
-                        "description": "Not Found",
+                        "description": "Currency not found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": {

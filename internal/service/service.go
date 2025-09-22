@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"currency-converter/internal/api/cbr"
 	"currency-converter/internal/model"
 	"currency-converter/internal/repository"
 	"fmt"
@@ -16,7 +17,6 @@ type Service interface {
 	ListCurrencies() (map[string]*model.Currency, error)
 	GetCurrency(code string) (*model.Currency, error)
 	UpdateCurrency(cur *model.Currency) (*model.Currency, error)
-	DeleteCurrency(code string) error
 
 	ListConversions() ([]*model.Conversion, error)
 	CreateConversion(amount float64, fromCode, toCode string) (*model.Conversion, error)
@@ -25,12 +25,14 @@ type Service interface {
 type service struct {
 	repo       repository.Repository
 	entityChan chan model.Entity
+	cbrClient  *cbr.CBRClient
 }
 
 func NewService(repo repository.Repository) *service {
 	return &service{
 		repo:       repo,
-		entityChan: make(chan model.Entity, 10),
+		entityChan: make(chan model.Entity, 56),
+		cbrClient:  cbr.NewCBRClient(),
 	}
 }
 
@@ -55,29 +57,141 @@ func (s *service) processEntities(ctx context.Context) {
 	}
 }
 
-func (s *service) generateData(ctx context.Context) {
-	ticker := time.NewTicker(2 * time.Second)
+func (s *service) syncCBRData(ctx context.Context) {
+	ticker := time.NewTicker(time.Hour)
 	defer ticker.Stop()
 
-	i := 1
+	semaphore := make(chan struct{}, 3)
+
+	if err := s.loadCBRData(ctx); err != nil {
+		log.Printf("Failed to load initial ЦБ РФ data: %v", err)
+	}
+
 	for {
 		select {
 		case <-ticker.C:
-			currency := model.NewCurrency(
-				"CUR"+string(rune('A'+i)),
-				float64(i)*1.1,
-				"TestCurrency",
-				"$",
-			)
-			s.AddEntity(currency)
-			log.Printf("Generated test currency: %s", currency.Code)
-			i++
+			select {
+			case semaphore <- struct{}{}:
+				go func(ctx context.Context) {
+					defer func() {
+						<-semaphore
+						if r := recover(); r != nil {
+							log.Printf("Panic recovered in data ЦБ РФ %v", r)
+						}
+					}()
+					if err := s.loadCBRData(ctx); err != nil {
+						log.Printf("Failed to sync ЦБ РФ data: %v", err)
+					}
+				}(ctx)
+			default:
+				log.Println("ЦБ РФ sync skipped: too many concurrent requests")
+			}
 		case <-ctx.Done():
-			close(s.entityChan)
-			log.Println("Data generation stopped: context cancelled")
+			log.Println("ЦБ РФ data sync stopped: context cancelled")
 			return
 		}
 	}
+}
+
+func (s *service) loadCBRData(ctx context.Context) error {
+	rates, err := s.cbrClient.GetDailyRates(ctx)
+	if err != nil {
+		return fmt.Errorf("failed to get ЦБ РФ rates: %w", err)
+	}
+
+	// ---The Russian ruble is the base currency---
+	baseRates := make(map[string]*model.Currency)
+	baseRates["RUB"] = &model.Currency{
+		Code:   "RUB",
+		Rate:   1.0,
+		Name:   "Российский рубль",
+		Symbol: "₽",
+	}
+
+	for code, rate := range rates.Valute {
+		rates := rate.Value / rate.Nominal
+		baseRates[code] = &model.Currency{
+			Code:   code,
+			Rate:   rates,
+			Name:   rate.Name,
+			Symbol: getCurrencySymbol(code),
+		}
+	}
+
+	for _, currency := range baseRates {
+		if err := s.AddEntity(currency); err != nil {
+			log.Printf("Failed to store currency %s: %v", currency.Code, err)
+		}
+	}
+
+	time.Sleep(time.Millisecond)
+	log.Printf("Loaded %d currencies from ЦБ РФ", len(baseRates))
+	return nil
+}
+
+func getCurrencySymbol(code string) string {
+	symbols := map[string]string{
+		"AUD": "A$",     // Австралийский доллар
+		"AZN": "₼",      // Азербайджанский манат
+		"DZD": "د.ج",    // Алжирский динар
+		"GBP": "£",      // Фунт стерлингов
+		"AMD": "֏",      // Армянский драм
+		"BHD": ".ب.د",   // Бахрейнский динар
+		"BYN": "Br",     // Белорусский рубль
+		"BGN": "лв",     // Болгарский лев
+		"BOB": "Bs.",    // Боливиано
+		"BRL": "R$",     // Бразильский реал
+		"HUF": "Ft",     // Венгерский форинт
+		"VND": "₫",      // Вьетнамский донг
+		"HKD": "HK$",    // Гонконгский доллар
+		"GEL": "₾",      // Грузинский лари
+		"DKK": "kr",     // Датская крона
+		"AED": "د.إ",    // Дирхам ОАЭ
+		"USD": "$",      // Доллар США
+		"EUR": "€",      // Евро
+		"EGP": "ج.م",    // Египетский фунт
+		"INR": "₹",      // Индийская рупия
+		"IDR": "Rp",     // Индонезийская рупия
+		"IRR": "﷼",      // Иранский риал
+		"KZT": "₸",      // Казахстанский тенге
+		"CAD": "C$",     // Канадский доллар
+		"QAR": "ر.ق",    // Катарский риал
+		"KGS": "сом",    // Киргизский сом
+		"CNY": "¥",      // Китайский юань
+		"CUP": "C$",     // Кубинское песо
+		"MDL": "lei",    // Молдавский лей
+		"MNT": "₮",      // Монгольский тугрик
+		"NGN": "₦",      // Нигерийская найра
+		"NZD": "NZ$",    // Новозеландский доллар
+		"NOK": "kr",     // Норвежская крона
+		"OMR": "ر.ع",    // Оманский риал
+		"PLN": "zł",     // Польский злотый
+		"SAR": "ر.س",    // Саудовский риял
+		"RON": "lei",    // Румынский лей
+		"XDR": "XDR",    // СДР
+		"SGD": "S$",     // Сингапурский доллар
+		"TJS": "сомони", // Таджикский сомони
+		"THB": "฿",      // Тайский бат
+		"BDT": "৳",      // Бангладешская така
+		"TRY": "₺",      // Турецкая лира
+		"TMT": "m",      // Туркменский манат
+		"UZS": "so'm",   // Узбекский сум
+		"UAH": "₴",      // Украинская гривна
+		"CZK": "Kč",     // Чешская крона
+		"SEK": "kr",     // Шведская крона
+		"CHF": "CHF",    // Швейцарский франк
+		"ETB": "Br",     // Эфиопский быр
+		"RSD": "din",    // Сербский динар
+		"ZAR": "R",      // Южноафриканский рэнд
+		"KRW": "₩",      // Южнокорейский вон
+		"JPY": "¥",      // Японская иена
+		"MMK": "K",      // Мьянманский кьят
+		"RUB": "₽",      // Российский рубль
+	}
+	if symbol, exist := symbols[code]; exist {
+		return symbol
+	}
+	return code
 }
 
 func (s *service) startLogging(ctx context.Context) {
@@ -85,7 +199,7 @@ func (s *service) startLogging(ctx context.Context) {
 	for code := range s.repo.GetCurrencies() {
 		seen[code] = true
 	}
-	
+
 	for {
 		select {
 		case <-ctx.Done():
@@ -103,11 +217,11 @@ func (s *service) startLogging(ctx context.Context) {
 	}
 }
 
-func InitService(ctx context.Context, repo repository.Repository) *service {
+func InitService(ctx context.Context, repo repository.Repository, cbrClient *cbr.CBRClient) *service {
 	s := NewService(repo)
 
 	go s.processEntities(ctx)
-	go s.generateData(ctx)
+	go s.syncCBRData(ctx)
 	go s.startLogging(ctx)
 
 	log.Println("Currency converter service initialized successfully")
@@ -130,11 +244,11 @@ func (s *service) CreateCurrency(cur *model.Currency) (*model.Currency, error) {
 	if cur.Code == "" || cur.Rate <= 0 || cur.Name == "" || cur.Symbol == "" {
 		return nil, fmt.Errorf("invalid currency data: all fields must be provided and rate must be positive")
 	}
-	
-	if err := s.repo.Store(cur); err != nil {
+
+	if err := s.AddEntity(cur); err != nil {
 		return nil, fmt.Errorf("failed to create currency: %v", err)
 	}
-	
+
 	log.Printf("Currency created successfully: %s (%s)", cur.Code, cur.Name)
 	return cur, nil
 }
@@ -149,13 +263,13 @@ func (s *service) GetCurrency(code string) (*model.Currency, error) {
 	if code == "" {
 		return nil, fmt.Errorf("currency code cannot be empty")
 	}
-	
+
 	data := s.repo.GetCurrencies()
 	if cur, ok := data[code]; ok {
 		log.Printf("Currency found: %s", code)
 		return cur, nil
 	}
-	
+
 	return nil, fmt.Errorf("currency '%s' not found in the system", code)
 }
 
@@ -163,32 +277,14 @@ func (s *service) UpdateCurrency(cur *model.Currency) (*model.Currency, error) {
 	if cur.Code == "" {
 		return nil, fmt.Errorf("currency code is required for update")
 	}
-	
+
 	err := s.repo.UpdateCurrency(cur)
 	if err != nil {
 		return nil, fmt.Errorf("failed to update currency '%s': %v", cur.Code, err)
 	}
-	
+
 	log.Printf("Currency updated successfully: %s", cur.Code)
 	return cur, nil
-}
-
-func (s *service) DeleteCurrency(code string) error {
-	if code == "" {
-		return fmt.Errorf("currency code cannot be empty")
-	}
-	
-	cur, _ := s.GetCurrency(code)
-	if cur == nil {
-		return fmt.Errorf("cannot delete - currency '%s' not found", code)
-	}
-	
-	if err := s.repo.DeleteCurrency(code); err != nil {
-		return fmt.Errorf("failed to delete currency '%s': %v", code, err)
-	}
-	
-	log.Printf("Currency deleted successfully: %s", code)
-	return nil
 }
 
 func (s *service) ListConversions() ([]*model.Conversion, error) {
@@ -197,8 +293,8 @@ func (s *service) ListConversions() ([]*model.Conversion, error) {
 	return conversions, nil
 }
 
-func (s *service) CreateConversion(amount float64, fromCode, toCode string) (*model.Conversion, error) {
-	if amount <= 0 {
+func (s *service) CreateConversion(nominal float64, fromCode, toCode string) (*model.Conversion, error) {
+	if nominal <= 0 {
 		return nil, fmt.Errorf("conversion amount must be greater than zero")
 	}
 	if fromCode == "" || toCode == "" {
@@ -207,25 +303,27 @@ func (s *service) CreateConversion(amount float64, fromCode, toCode string) (*mo
 
 	curs := s.repo.GetCurrencies()
 	from, ok1 := curs[fromCode]
-	to, ok2 := curs[toCode]
-	
 	if !ok1 {
 		return nil, fmt.Errorf("source currency '%s' not found", fromCode)
-	}
-	if !ok2 {
-		return nil, fmt.Errorf("target currency '%s' not found", toCode)
-	}
-	if from.Rate <= 0 || to.Rate <= 0 {
+	} else if from.Rate <= 0 {
 		return nil, fmt.Errorf("invalid exchange rates - both must be positive values")
 	}
-	
-	result := amount * (from.Rate / to.Rate)
-	conv := model.NewConversion(amount, from, to, result)
+	to, ok2 := curs[toCode]
+	if !ok2 {
+		return nil, fmt.Errorf("target currency '%s' not found", toCode)
+	} else if to.Rate <= 0 {
+		return nil, fmt.Errorf("invalid exchange rates - both must be positive values")
+	}
 
-	if err := s.repo.Store(conv); err != nil {
+	nominalInRubles := nominal * from.Rate
+	result := nominalInRubles / to.Rate
+
+	conv := model.NewConversion(nominal, from, to, result)
+
+	if err := s.AddEntity(conv); err != nil {
 		return nil, fmt.Errorf("failed to save conversion: %v", err)
 	}
-	
-	log.Printf("Conversion completed: %.2f %s → %.2f %s", amount, fromCode, result, toCode)
+
+	log.Printf("Conversion completed: %.2f %s → %.2f %s", nominal, fromCode, result, toCode)
 	return conv, nil
 }

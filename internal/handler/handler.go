@@ -4,6 +4,7 @@ import (
 	"currency-converter/internal/httputil"
 	"currency-converter/internal/model"
 	"currency-converter/internal/service"
+	"strings"
 
 	"net/http"
 )
@@ -33,21 +34,22 @@ func (h *CurrencyHandler) CreateCurrency(res http.ResponseWriter, req *http.Requ
 		httputil.WriteError(res, http.StatusBadRequest, "Invalid JSON format")
 		return
 	}
-	
+
 	if respCur, err := h.svc.CreateCurrency(&cur); err == nil {
 		httputil.WriteJson(res, http.StatusCreated, &respCur)
 		return
 	}
-	
+
 	httputil.WriteError(res, http.StatusBadRequest, "Invalid currency data provided")
 }
 
 // ListCurrencies godoc
-// @Summary Get currencies list
+// @Summary Get list of all available currencies
+// @Description Retrieves all currencies with current exchange rates from Central Bank of Russia
 // @Tags currency
 // @Produce json
-// @Success 200 {array} model.Currency
-// @Failure 500 {object} map[string]string
+// @Success 200 {object} map[string]model.Currency "Successfully retrieved currencies map"
+// @Failure 500 {object} map[string]string "Internal server error"
 // @Router /currencies [get]
 func (h *CurrencyHandler) ListCurrencies(res http.ResponseWriter, req *http.Request) {
 	data, err := h.svc.ListCurrencies()
@@ -59,12 +61,15 @@ func (h *CurrencyHandler) ListCurrencies(res http.ResponseWriter, req *http.Requ
 }
 
 // GetCurrency godoc
-// @Summary Get currency details
+// @Summary Get currency details by code
+// @Description Retrieves detailed information about specific currency including exchange rate from Central Bank of Russia
 // @Tags currency
 // @Produce json
-// @Param code path string true "Currency code (e.g., USD, EUR)"
-// @Success 200 {object} model.Currency
-// @Failure 404 {object} map[string]string
+// @Param code path string true "Currency code (ISO 4217 format)" Example(USD)
+// @Success 200 {object} model.Currency "Successfully retrieved currency details"
+// @Failure 400 {object} map[string]string "Invalid currency code format"
+// @Failure 404 {object} map[string]string "Currency not found"
+// @Failure 500 {object} map[string]string "Internal server error"
 // @Router /currency/{code} [get]
 func (h *CurrencyHandler) GetCurrency(res http.ResponseWriter, req *http.Request) {
 	code := req.PathValue("code")
@@ -82,15 +87,17 @@ func (h *CurrencyHandler) GetCurrency(res http.ResponseWriter, req *http.Request
 }
 
 // UpdateCurrency godoc
-// @Summary Update currency
+// @Summary Update currency exchange rate
+// @Description Updates the exchange rate for a specific currency. Note: Normally rates are updated automatically from Central Bank of Russia
 // @Tags currency
 // @Accept json
 // @Produce json
-// @Param code path string true "Currency code to update"
-// @Param currency body model.Currency true "Updated currency data"
-// @Success 200 {object} model.Currency
-// @Failure 400 {object} map[string]string
-// @Failure 404 {object} map[string]string
+// @Param code path string true "Currency code to update (ISO 4217 format)" Example(USD)
+// @Param currency body model.Currency true "Currency data with updated exchange rate"
+// @Success 200 {object} model.Currency "Successfully updated currency"
+// @Failure 400 {object} map[string]string "Invalid input data or currency code mismatch"
+// @Failure 404 {object} map[string]string "Currency not found"
+// @Failure 500 {object} map[string]string "Internal server error"
 // @Router /currency/{code} [put]
 func (h *CurrencyHandler) UpdateCurrency(res http.ResponseWriter, req *http.Request) {
 	code := req.PathValue("code")
@@ -98,46 +105,23 @@ func (h *CurrencyHandler) UpdateCurrency(res http.ResponseWriter, req *http.Requ
 		httputil.WriteError(res, http.StatusBadRequest, "Currency code is required")
 		return
 	}
-	
+
 	var cur model.Currency
 	if err := httputil.ReadJson(*req, &cur); err != nil {
 		httputil.WriteError(res, http.StatusBadRequest, "Invalid JSON format")
 		return
+	} else if cur.Rate <= 0 {
+		httputil.WriteError(res, http.StatusBadRequest, "Exchange rate must be greater than zero")
+		return
 	}
-	
+
 	cur.Code = code
 	if update, err := h.svc.UpdateCurrency(&cur); err == nil {
 		httputil.WriteJson(res, http.StatusOK, update)
 		return
 	}
-	
+
 	httputil.WriteError(res, http.StatusNotFound, "Currency not found: "+code)
-}
-
-// DeleteCurrency godoc
-// @Summary Delete currency
-// @Tags currency
-// @Produce json
-// @Param code path string true "Currency code to delete"
-// @Success 200 {object} map[string]string
-// @Failure 404 {object} map[string]string
-// @Router /currency/{code} [delete]
-func (h *CurrencyHandler) DeleteCurrency(res http.ResponseWriter, req *http.Request) {
-	code := req.PathValue("code")
-	if code == "" {
-		httputil.WriteError(res, http.StatusBadRequest, "Currency code is required")
-		return
-	}
-
-	if err := h.svc.DeleteCurrency(code); err != nil {
-		httputil.WriteError(res, http.StatusNotFound, "Currency not found: "+code)
-		return
-	}
-	
-	httputil.WriteJson(res, http.StatusOK, map[string]string{
-		"status": "success", 
-		"message": "Currency deleted successfully: " + code,
-	})
 }
 
 type ConversionHandler struct {
@@ -149,14 +133,17 @@ func NewConversionHandler(svc service.Service) *ConversionHandler {
 }
 
 // CreateConversion godoc
-// @Summary Create conversion
-// @Description Converts currency and saves the result
+// @Summary Convert currency amount
+// @Description Converts amount from one currency to another using current Central Bank of Russia exchange rates and saves the conversion result
 // @Tags conversion
 // @Accept json
 // @Produce json
-// @Param request body model.ConversionRequest true "Conversion request"
-// @Success 201 {object} model.Conversion
-// @Failure 400 {object} map[string]string
+// @Param request body model.ConversionRequest true "Conversion request parameters" Example({"amount": 100, "from": "USD", "to": "EUR"})
+// @Success 201 {object} model.Conversion "Successfully converted currency"
+// @Failure 400 {object} map[string]string "Invalid request parameters"
+// @Failure 404 {object} map[string]string "Currency not found"
+// @Failure 422 {object} map[string]string "Invalid conversion parameters"
+// @Failure 500 {object} map[string]string "Internal server error"
 // @Router /conversion [post]
 func (h *ConversionHandler) CreateConversion(res http.ResponseWriter, req *http.Request) {
 	var convReq model.ConversionRequest
@@ -164,22 +151,30 @@ func (h *ConversionHandler) CreateConversion(res http.ResponseWriter, req *http.
 		httputil.WriteError(res, http.StatusBadRequest, "Invalid JSON format")
 		return
 	}
-	
 	conv, err := h.svc.CreateConversion(convReq.Amount, convReq.From, convReq.To)
 	if err != nil {
-		httputil.WriteError(res, http.StatusBadRequest, "Conversion failed: "+err.Error())
+		switch {
+		case strings.Contains(err.Error(), "not found"):
+			httputil.WriteError(res, http.StatusNotFound, err.Error())
+		case strings.Contains(err.Error(), "must be greater than zero"),
+			strings.Contains(err.Error(), "cannot convert"):
+			httputil.WriteError(res, http.StatusUnprocessableEntity, err.Error())
+		default:
+			httputil.WriteError(res, http.StatusBadRequest, err.Error())
+		}
 		return
 	}
-	
+
 	httputil.WriteJson(res, http.StatusCreated, conv)
 }
 
 // ListConversions godoc
-// @Summary Get conversions history
+// @Summary Get conversion history
+// @Description Retrieves history of all currency conversions performed
 // @Tags conversion
 // @Produce json
-// @Success 200 {array} model.Conversion
-// @Failure 500 {object} map[string]string
+// @Success 200 {array} model.Conversion "Successfully retrieved conversion history"
+// @Failure 500 {object} map[string]string "Internal server error"
 // @Router /conversions [get]
 func (h *ConversionHandler) ListConversions(res http.ResponseWriter, req *http.Request) {
 	data, err := h.svc.ListConversions()
