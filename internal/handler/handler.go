@@ -1,170 +1,191 @@
 package handler
 
 import (
+	"currency-converter/internal/httputil"
 	"currency-converter/internal/model"
-	"currency-converter/internal/usecase"
-	"currency-converter/repository"
+	"currency-converter/internal/service"
 
-	"encoding/json"
 	"net/http"
 )
 
+type CurrencyHandler struct {
+	svc service.Service
+}
+
+func NewCurrencyHandler(svc service.Service) *CurrencyHandler {
+	return &CurrencyHandler{svc: svc}
+}
+
 // CreateCurrency godoc
-// @Summary Создать валюту
-// @Description Добавляет новую валюту в хранилище
+// @Summary Create currency
+// @Description Adds a new currency to the storage
 // @Tags currency
 // @Accept json
 // @Produce json
-// @Param currency body model.Currency true "Валюта"
+// @Param currency body model.Currency true "Currency data"
 // @Success 201 {object} model.Currency
 // @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
 // @Router /currency [post]
-func CreateCurrency(res http.ResponseWriter, req *http.Request) {
+func (h *CurrencyHandler) CreateCurrency(res http.ResponseWriter, req *http.Request) {
 	var cur model.Currency
-	if err := json.NewDecoder(req.Body).Decode(&cur); err != nil {
-		usecase.WriteError(res, http.StatusBadRequest, "invalid JSON.")
+	if err := httputil.ReadJson(*req, &cur); err != nil {
+		httputil.WriteError(res, http.StatusBadRequest, "Invalid JSON format")
 		return
 	}
-
-	if cur.Code == "" || cur.Rate <= 0 {
-		usecase.WriteError(res, http.StatusBadRequest, "need to enter the code and the rate.")
+	
+	if respCur, err := h.svc.CreateCurrency(&cur); err == nil {
+		httputil.WriteJson(res, http.StatusCreated, &respCur)
 		return
 	}
-
-	repository.Store(&cur)
-	usecase.WriteJson(res, http.StatusCreated, cur)
+	
+	httputil.WriteError(res, http.StatusBadRequest, "Invalid currency data provided")
 }
 
 // ListCurrencies godoc
-// @Summary Получить список валют
+// @Summary Get currencies list
 // @Tags currency
 // @Produce json
 // @Success 200 {array} model.Currency
+// @Failure 500 {object} map[string]string
 // @Router /currencies [get]
-func ListCurrencies(res http.ResponseWriter, req *http.Request) {
-	data := repository.GetCurrencies()
-
-	arr := make([]*model.Currency, 0, len(data))
-
-	for _, v := range data {
-		arr = append(arr, v)
+func (h *CurrencyHandler) ListCurrencies(res http.ResponseWriter, req *http.Request) {
+	data, err := h.svc.ListCurrencies()
+	if err != nil {
+		httputil.WriteError(res, http.StatusInternalServerError, "Failed to retrieve currencies list")
+		return
 	}
-	usecase.WriteJson(res, http.StatusOK, arr)
+	httputil.WriteJson(res, http.StatusOK, data)
 }
 
 // GetCurrency godoc
-// @Summary Получить валюту
+// @Summary Get currency details
 // @Tags currency
 // @Produce json
-// @Param code path string true "Код валюты"
+// @Param code path string true "Currency code (e.g., USD, EUR)"
 // @Success 200 {object} model.Currency
 // @Failure 404 {object} map[string]string
 // @Router /currency/{code} [get]
-func GetCurrency(res http.ResponseWriter, req *http.Request) {
+func (h *CurrencyHandler) GetCurrency(res http.ResponseWriter, req *http.Request) {
 	code := req.PathValue("code")
-
-	data := repository.GetCurrencies()
-	if currency, ok := data[code]; ok {
-		usecase.WriteJson(res, http.StatusOK, currency)
+	if code == "" {
+		httputil.WriteError(res, http.StatusBadRequest, "Currency code is required")
 		return
 	}
-	usecase.WriteError(res, http.StatusNotFound, "invalid JSON")
+
+	cur, err := h.svc.GetCurrency(code)
+	if err != nil {
+		httputil.WriteError(res, http.StatusNotFound, "Currency not found: "+code)
+		return
+	}
+	httputil.WriteJson(res, http.StatusOK, cur)
 }
 
 // UpdateCurrency godoc
-// @Summary Обновить валюту
+// @Summary Update currency
 // @Tags currency
 // @Accept json
 // @Produce json
-// @Param code path string true "Код валюты"
-// @Param currency body model.Currency true "Валюта"
+// @Param code path string true "Currency code to update"
+// @Param currency body model.Currency true "Updated currency data"
 // @Success 200 {object} model.Currency
 // @Failure 400 {object} map[string]string
+// @Failure 404 {object} map[string]string
 // @Router /currency/{code} [put]
-func UpdateCurrency(res http.ResponseWriter, req *http.Request) {
+func (h *CurrencyHandler) UpdateCurrency(res http.ResponseWriter, req *http.Request) {
 	code := req.PathValue("code")
-
-	var upd model.Currency
-	if err := json.NewDecoder(req.Body).Decode(&upd); err != nil {
-		usecase.WriteError(res, http.StatusBadRequest, "invalid JSON")
+	if code == "" {
+		httputil.WriteError(res, http.StatusBadRequest, "Currency code is required")
 		return
 	}
-
-	upd.Code = code
-	if err := repository.UpdateCurInMap(&upd); err != nil {
-		usecase.WriteError(res, http.StatusNotFound, "the currency not found")
+	
+	var cur model.Currency
+	if err := httputil.ReadJson(*req, &cur); err != nil {
+		httputil.WriteError(res, http.StatusBadRequest, "Invalid JSON format")
 		return
 	}
-
-	usecase.WriteJson(res, http.StatusOK, upd)
+	
+	cur.Code = code
+	if update, err := h.svc.UpdateCurrency(&cur); err == nil {
+		httputil.WriteJson(res, http.StatusOK, update)
+		return
+	}
+	
+	httputil.WriteError(res, http.StatusNotFound, "Currency not found: "+code)
 }
 
 // DeleteCurrency godoc
-// @Summary Удалить валюту
+// @Summary Delete currency
 // @Tags currency
 // @Produce json
-// @Param code path string true "Код валюты"
+// @Param code path string true "Currency code to delete"
 // @Success 200 {object} map[string]string
 // @Failure 404 {object} map[string]string
 // @Router /currency/{code} [delete]
-func DeleteCurrency(res http.ResponseWriter, req *http.Request) {
+func (h *CurrencyHandler) DeleteCurrency(res http.ResponseWriter, req *http.Request) {
 	code := req.PathValue("code")
-
-	if err := repository.DeleteCurFromMap(code); err != nil {
-		usecase.WriteError(res, http.StatusNotFound, "the currncy not found")
+	if code == "" {
+		httputil.WriteError(res, http.StatusBadRequest, "Currency code is required")
 		return
 	}
 
-	usecase.WriteJson(res, http.StatusOK, map[string]string{"status:": "deleted"})
+	if err := h.svc.DeleteCurrency(code); err != nil {
+		httputil.WriteError(res, http.StatusNotFound, "Currency not found: "+code)
+		return
+	}
+	
+	httputil.WriteJson(res, http.StatusOK, map[string]string{
+		"status": "success", 
+		"message": "Currency deleted successfully: " + code,
+	})
+}
+
+type ConversionHandler struct {
+	svc service.Service
+}
+
+func NewConversionHandler(svc service.Service) *ConversionHandler {
+	return &ConversionHandler{svc: svc}
 }
 
 // CreateConversion godoc
-// @Summary Создать конвертацию
-// @Description Конвертирует валюту и сохраняет результат
+// @Summary Create conversion
+// @Description Converts currency and saves the result
 // @Tags conversion
 // @Accept json
 // @Produce json
-// @Param request body model.ConversionRequest true "Запрос на конвертацию"
+// @Param request body model.ConversionRequest true "Conversion request"
 // @Success 201 {object} model.Conversion
 // @Failure 400 {object} map[string]string
 // @Router /conversion [post]
-func CreateConversion(res http.ResponseWriter, req *http.Request) {
-	var conv struct {
-		Amount float64 `json:"amount"`
-		From   string  `json:"from"`
-		To     string  `json:"to"`
-	}
-	if err := json.NewDecoder(req.Body).Decode(&conv); err != nil {
-		usecase.WriteError(res, http.StatusBadRequest, "invalid JSON")
+func (h *ConversionHandler) CreateConversion(res http.ResponseWriter, req *http.Request) {
+	var convReq model.ConversionRequest
+	if err := httputil.ReadJson(*req, &convReq); err != nil {
+		httputil.WriteError(res, http.StatusBadRequest, "Invalid JSON format")
 		return
 	}
-
-	curs := repository.GetCurrencies()
-	from, ok1 := curs[conv.From]
-	to, ok2 := curs[conv.To]
-	if !ok1 || !ok2 {
-		usecase.WriteError(res, http.StatusBadRequest, "the source or target currency was not found.")
+	
+	conv, err := h.svc.CreateConversion(convReq.Amount, convReq.From, convReq.To)
+	if err != nil {
+		httputil.WriteError(res, http.StatusBadRequest, "Conversion failed: "+err.Error())
 		return
 	}
-
-	if from.Rate <= 0 || to.Rate <= 0 {
-		usecase.WriteError(res, http.StatusBadRequest, "the rate should be > 0")
-		return
-	}
-	result := conv.Amount * (to.Rate / from.Rate)
-	conversion := model.NewConversion(conv.Amount, from, to, result)
-	repository.Store(conversion)
-
-	usecase.WriteJson(res, http.StatusCreated, conversion)
+	
+	httputil.WriteJson(res, http.StatusCreated, conv)
 }
 
 // ListConversions godoc
-// @Summary Получить список конвертаций
+// @Summary Get conversions history
 // @Tags conversion
 // @Produce json
 // @Success 200 {array} model.Conversion
+// @Failure 500 {object} map[string]string
 // @Router /conversions [get]
-func ListConversions(res http.ResponseWriter, req *http.Request) {
-	data := repository.GetConversions()
-	usecase.WriteJson(res, http.StatusOK, data)
+func (h *ConversionHandler) ListConversions(res http.ResponseWriter, req *http.Request) {
+	data, err := h.svc.ListConversions()
+	if err != nil {
+		httputil.WriteError(res, http.StatusInternalServerError, "Failed to retrieve conversion history")
+		return
+	}
+	httputil.WriteJson(res, http.StatusOK, data)
 }

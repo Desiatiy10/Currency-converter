@@ -16,3 +16,5 @@ func NewCurrency(code string, rate float64, name string, symbol string) *Currenc
 		Symbol: symbol,
 	}
 }
+
+

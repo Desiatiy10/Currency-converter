@@ -1,4 +1,4 @@
-package usecase
+package httputil
 
 import (
 	"encoding/json"
@@ -20,4 +20,8 @@ func WriteJson(res http.ResponseWriter, status int, data any) error {
 
 func WriteError(res http.ResponseWriter, status int, msg string) {
 	WriteJson(res, status, map[string]string{"error:": msg})
+}
+
+func ReadJson(req http.Request, v any) error {
+	return json.NewDecoder(req.Body).Decode(v)
 }
