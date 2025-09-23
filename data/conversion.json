@@ -3,80 +3,256 @@
     "amount": 100,
     "from": {
       "code": "USD",
-      "rate": 1,
-      "name": "US Dollar",
+      "rate": 83.5904,
+      "name": "Доллар США",
       "symbol": "$"
+    },
+    "to": {
+      "code": "RUB",
+      "rate": 1,
+      "name": "Российский рубль",
+      "symbol": "₽"
+    },
+    "result": 8359.04
+  },
+  {
+    "amount": 1,
+    "from": {
+      "code": "USD",
+      "rate": 83.5904,
+      "name": "Доллар США",
+      "symbol": "$"
+    },
+    "to": {
+      "code": "RUB",
+      "rate": 1,
+      "name": "Российский рубль",
+      "symbol": "₽"
+    },
+    "result": 83.5904
+  },
+  {
+    "amount": 100,
+    "from": {
+      "code": "RUB",
+      "rate": 1,
+      "name": "Российский рубль",
+      "symbol": "₽"
     },
     "to": {
       "code": "EUR",
-      "rate": 0.95,
-      "name": "Euro (updated)",
+      "rate": 98.8845,
+      "name": "Евро",
       "symbol": "€"
     },
-    "result": 95
+    "result": 1.011280837745046
   },
   {
     "amount": 100,
     "from": {
-      "code": "CURC",
-      "rate": 2.2,
-      "name": "TestCurrency",
-      "symbol": "$"
+      "code": "RUB",
+      "rate": 1,
+      "name": "Российский рубль",
+      "symbol": "₽"
     },
     "to": {
-      "code": "CURC",
-      "rate": 2.2,
-      "name": "TestCurrency",
-      "symbol": "$"
+      "code": "EUR",
+      "rate": 98.8845,
+      "name": "Евро",
+      "symbol": "€"
     },
-    "result": 100
+    "result": 1.011280837745046
   },
   {
     "amount": 100,
     "from": {
-      "code": "CURB",
-      "rate": 1.1,
-      "name": "TestCurrency",
-      "symbol": "$"
+      "code": "EUR",
+      "rate": 98.8845,
+      "name": "Евро",
+      "symbol": "€"
     },
     "to": {
-      "code": "CURC",
-      "rate": 2.2,
-      "name": "TestCurrency",
-      "symbol": "$"
+      "code": "RUB",
+      "rate": 1,
+      "name": "Российский рубль",
+      "symbol": "₽"
     },
-    "result": 200
+    "result": 9888.45
   },
   {
     "amount": 100,
     "from": {
       "code": "USD",
-      "rate": 1,
-      "name": "Dollar",
+      "rate": 83.5904,
+      "name": "Доллар США",
       "symbol": "$"
     },
     "to": {
       "code": "EUR",
-      "rate": 0.95,
-      "name": "Euro (updated)",
+      "rate": 98.8845,
+      "name": "Евро",
       "symbol": "€"
     },
-    "result": 105.26315789473685
+    "result": 118.29647902151444
   },
   {
     "amount": 100,
     "from": {
-      "code": "USDevil",
-      "rate": 10000,
-      "name": "testUPD",
-      "symbol": "ээ"
+      "code": "EUR",
+      "rate": 98.8845,
+      "name": "Евро",
+      "symbol": "€"
+    },
+    "to": {
+      "code": "USD",
+      "rate": 83.5904,
+      "name": "Доллар США",
+      "symbol": "$"
+    },
+    "result": 84.5333697394435
+  },
+  {
+    "amount": 100,
+    "from": {
+      "code": "USD",
+      "rate": 83.5904,
+      "name": "Доллар США",
+      "symbol": "$"
     },
     "to": {
       "code": "EUR",
-      "rate": 1.05,
-      "name": "US Dollar",
+      "rate": 98.8845,
+      "name": "Евро",
+      "symbol": "€"
+    },
+    "result": 118.29647902151444
+  },
+  {
+    "amount": 100,
+    "from": {
+      "code": "USD",
+      "rate": 83.5904,
+      "name": "Доллар США",
       "symbol": "$"
     },
-    "result": 0.009523809523809525
+    "to": {
+      "code": "EUR",
+      "rate": 98.8845,
+      "name": "Евро",
+      "symbol": "€"
+    },
+    "result": 84.5333697394435
+  },
+  {
+    "amount": 100,
+    "from": {
+      "code": "EUR",
+      "rate": 98.8845,
+      "name": "Евро",
+      "symbol": "€"
+    },
+    "to": {
+      "code": "USD",
+      "rate": 83.5904,
+      "name": "Доллар США",
+      "symbol": "$"
+    },
+    "result": 118.29647902151444
+  },
+  {
+    "amount": 100,
+    "from": {
+      "code": "BHD",
+      "rate": 222.2669,
+      "name": "Бахрейнский динар",
+      "symbol": ".ب.د"
+    },
+    "to": {
+      "code": "USD",
+      "rate": 83.5904,
+      "name": "Доллар США",
+      "symbol": "$"
+    },
+    "result": 265.90003158257406
+  },
+  {
+    "amount": 100,
+    "from": {
+      "code": "BHD",
+      "rate": 222.2669,
+      "name": "Бахрейнский динар",
+      "symbol": ".ب.د"
+    },
+    "to": {
+      "code": "RUB",
+      "rate": 1,
+      "name": "Российский рубль",
+      "symbol": "₽"
+    },
+    "result": 22226.69
+  },
+  {
+    "amount": 100,
+    "from": {
+      "code": "RUB",
+      "rate": 1,
+      "name": "Российский рубль",
+      "symbol": "₽"
+    },
+    "to": {
+      "code": "BHD",
+      "rate": 222.2669,
+      "name": "Бахрейнский динар",
+      "symbol": ".ب.د"
+    },
+    "result": 0.44990954568583985
+  },
+  {
+    "amount": 100,
+    "from": {
+      "code": "EUR",
+      "rate": 98.8845,
+      "name": "Евро",
+      "symbol": "€"
+    },
+    "to": {
+      "code": "USD",
+      "rate": 83.5904,
+      "name": "Доллар США",
+      "symbol": "$"
+    },
+    "result": 118.29647902151444
+  },
+  {
+    "amount": 100,
+    "from": {
+      "code": "EUR",
+      "rate": 98.8845,
+      "name": "Евро",
+      "symbol": "€"
+    },
+    "to": {
+      "code": "USD",
+      "rate": 83.5904,
+      "name": "Доллар США",
+      "symbol": "$"
+    },
+    "result": 118.29647902151444
+  },
+  {
+    "amount": 1000,
+    "from": {
+      "code": "EUR",
+      "rate": 98.8845,
+      "name": "Евро",
+      "symbol": "€"
+    },
+    "to": {
+      "code": "RUB",
+      "rate": 1,
+      "name": "Российский рубль",
+      "symbol": "₽"
+    },
+    "result": 98884.5
   }
 ]

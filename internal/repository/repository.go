@@ -17,7 +17,6 @@ type Repository interface {
 	Store(entity model.Entity) error
 	GetCurrencies() map[string]*model.Currency
 	GetConversions() []*model.Conversion
-	DeleteCurrency(code string) error
 	UpdateCurrency(currency *model.Currency) error
 	LoadCurrencies() error
 	LoadConversions() error
@@ -83,10 +82,10 @@ func (r *repo) LoadCurrencies() error {
 		}
 		return fmt.Errorf("failed to read currencies file: %w", err)
 	}
-	
+
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	
+
 	if err := json.Unmarshal(fileData, &r.currencies); err != nil {
 		return fmt.Errorf("failed to unmarshal currencies data: %w", err)
 	}
@@ -102,22 +101,14 @@ func (r *repo) LoadConversions() error {
 		}
 		return fmt.Errorf("failed to read conversions file: %w", err)
 	}
-	
+
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	
+
 	if err := json.Unmarshal(fileData, &r.conversions); err != nil {
 		return fmt.Errorf("failed to unmarshal conversions data: %w", err)
 	}
 	return nil
-}
-
-func (r *repo) DeleteCurrency(code string) error {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-	
-	delete(r.currencies, code)
-	return r.saveCurrenciesToFile()
 }
 
 func (r *repo) UpdateCurrency(currency *model.Currency) error {
@@ -127,7 +118,7 @@ func (r *repo) UpdateCurrency(currency *model.Currency) error {
 	if _, exists := r.currencies[currency.Code]; !exists {
 		return fmt.Errorf("currency %s not found for update", currency.Code)
 	}
-	
+
 	r.currencies[currency.Code] = currency
 	return r.saveCurrenciesToFile()
 }

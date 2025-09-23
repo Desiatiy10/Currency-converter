@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.9
 // 	protoc        v6.32.0
-// source: entities.proto
+// source: proto/entities.proto
 
 package proto
 
@@ -34,7 +34,7 @@ type Currency struct {
 
 func (x *Currency) Reset() {
 	*x = Currency{}
-	mi := &file_entities_proto_msgTypes[0]
+	mi := &file_proto_entities_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -46,7 +46,7 @@ func (x *Currency) String() string {
 func (*Currency) ProtoMessage() {}
 
 func (x *Currency) ProtoReflect() protoreflect.Message {
-	mi := &file_entities_proto_msgTypes[0]
+	mi := &file_proto_entities_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -59,7 +59,7 @@ func (x *Currency) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Currency.ProtoReflect.Descriptor instead.
 func (*Currency) Descriptor() ([]byte, []int) {
-	return file_entities_proto_rawDescGZIP(), []int{0}
+	return file_proto_entities_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *Currency) GetCode() string {
@@ -102,7 +102,7 @@ type Conversion struct {
 
 func (x *Conversion) Reset() {
 	*x = Conversion{}
-	mi := &file_entities_proto_msgTypes[1]
+	mi := &file_proto_entities_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -114,7 +114,7 @@ func (x *Conversion) String() string {
 func (*Conversion) ProtoMessage() {}
 
 func (x *Conversion) ProtoReflect() protoreflect.Message {
-	mi := &file_entities_proto_msgTypes[1]
+	mi := &file_proto_entities_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -127,7 +127,7 @@ func (x *Conversion) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Conversion.ProtoReflect.Descriptor instead.
 func (*Conversion) Descriptor() ([]byte, []int) {
-	return file_entities_proto_rawDescGZIP(), []int{1}
+	return file_proto_entities_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *Conversion) GetAmount() float64 {
@@ -167,7 +167,7 @@ type CreateCurrencyRequest struct {
 
 func (x *CreateCurrencyRequest) Reset() {
 	*x = CreateCurrencyRequest{}
-	mi := &file_entities_proto_msgTypes[2]
+	mi := &file_proto_entities_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -179,7 +179,7 @@ func (x *CreateCurrencyRequest) String() string {
 func (*CreateCurrencyRequest) ProtoMessage() {}
 
 func (x *CreateCurrencyRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_entities_proto_msgTypes[2]
+	mi := &file_proto_entities_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -192,7 +192,7 @@ func (x *CreateCurrencyRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateCurrencyRequest.ProtoReflect.Descriptor instead.
 func (*CreateCurrencyRequest) Descriptor() ([]byte, []int) {
-	return file_entities_proto_rawDescGZIP(), []int{2}
+	return file_proto_entities_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *CreateCurrencyRequest) GetCurrency() *Currency {
@@ -211,7 +211,7 @@ type ListCurrenciesResponse struct {
 
 func (x *ListCurrenciesResponse) Reset() {
 	*x = ListCurrenciesResponse{}
-	mi := &file_entities_proto_msgTypes[3]
+	mi := &file_proto_entities_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -223,7 +223,7 @@ func (x *ListCurrenciesResponse) String() string {
 func (*ListCurrenciesResponse) ProtoMessage() {}
 
 func (x *ListCurrenciesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_entities_proto_msgTypes[3]
+	mi := &file_proto_entities_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -236,7 +236,7 @@ func (x *ListCurrenciesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListCurrenciesResponse.ProtoReflect.Descriptor instead.
 func (*ListCurrenciesResponse) Descriptor() ([]byte, []int) {
-	return file_entities_proto_rawDescGZIP(), []int{3}
+	return file_proto_entities_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *ListCurrenciesResponse) GetCurrencies() []*Currency {
@@ -257,7 +257,7 @@ type CreateConversionRequest struct {
 
 func (x *CreateConversionRequest) Reset() {
 	*x = CreateConversionRequest{}
-	mi := &file_entities_proto_msgTypes[4]
+	mi := &file_proto_entities_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -269,7 +269,7 @@ func (x *CreateConversionRequest) String() string {
 func (*CreateConversionRequest) ProtoMessage() {}
 
 func (x *CreateConversionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_entities_proto_msgTypes[4]
+	mi := &file_proto_entities_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -282,7 +282,7 @@ func (x *CreateConversionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateConversionRequest.ProtoReflect.Descriptor instead.
 func (*CreateConversionRequest) Descriptor() ([]byte, []int) {
-	return file_entities_proto_rawDescGZIP(), []int{4}
+	return file_proto_entities_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *CreateConversionRequest) GetAmount() float64 {
@@ -315,7 +315,7 @@ type ListConversionsResponse struct {
 
 func (x *ListConversionsResponse) Reset() {
 	*x = ListConversionsResponse{}
-	mi := &file_entities_proto_msgTypes[5]
+	mi := &file_proto_entities_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -327,7 +327,7 @@ func (x *ListConversionsResponse) String() string {
 func (*ListConversionsResponse) ProtoMessage() {}
 
 func (x *ListConversionsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_entities_proto_msgTypes[5]
+	mi := &file_proto_entities_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -340,7 +340,7 @@ func (x *ListConversionsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListConversionsResponse.ProtoReflect.Descriptor instead.
 func (*ListConversionsResponse) Descriptor() ([]byte, []int) {
-	return file_entities_proto_rawDescGZIP(), []int{5}
+	return file_proto_entities_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *ListConversionsResponse) GetConversions() []*Conversion {
@@ -350,11 +350,11 @@ func (x *ListConversionsResponse) GetConversions() []*Conversion {
 	return nil
 }
 
-var File_entities_proto protoreflect.FileDescriptor
+var File_proto_entities_proto protoreflect.FileDescriptor
 
-const file_entities_proto_rawDesc = "" +
+const file_proto_entities_proto_rawDesc = "" +
 	"\n" +
-	"\x0eentities.proto\x12\x11CurrencyConverter\x1a\x1bgoogle/protobuf/empty.proto\"^\n" +
+	"\x14proto/entities.proto\x12\x11CurrencyConverter\x1a\x1bgoogle/protobuf/empty.proto\"^\n" +
 	"\bCurrency\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\tR\x04code\x12\x12\n" +
 	"\x04rate\x18\x02 \x01(\x01R\x04rate\x12\x12\n" +
@@ -377,31 +377,30 @@ const file_entities_proto_rawDesc = "" +
 	"\x04from\x18\x02 \x01(\tR\x04from\x12\x0e\n" +
 	"\x02to\x18\x03 \x01(\tR\x02to\"Z\n" +
 	"\x17ListConversionsResponse\x12?\n" +
-	"\vconversions\x18\x01 \x03(\v2\x1d.CurrencyConverter.ConversionR\vconversions2\x9b\x03\n" +
+	"\vconversions\x18\x01 \x03(\v2\x1d.CurrencyConverter.ConversionR\vconversions2\xd4\x02\n" +
 	"\x0fCurrencyService\x12W\n" +
 	"\x0eCreateCurrency\x12(.CurrencyConverter.CreateCurrencyRequest\x1a\x1b.CurrencyConverter.Currency\x12G\n" +
 	"\vGetCurrency\x12\x1b.CurrencyConverter.Currency\x1a\x1b.CurrencyConverter.Currency\x12J\n" +
-	"\x0eUpdateCurrency\x12\x1b.CurrencyConverter.Currency\x1a\x1b.CurrencyConverter.Currency\x12E\n" +
-	"\x0eDeleteCurrency\x12\x1b.CurrencyConverter.Currency\x1a\x16.google.protobuf.Empty\x12S\n" +
+	"\x0eUpdateCurrency\x12\x1b.CurrencyConverter.Currency\x1a\x1b.CurrencyConverter.Currency\x12S\n" +
 	"\x0eListCurrencies\x12\x16.google.protobuf.Empty\x1a).CurrencyConverter.ListCurrenciesResponse2\xc9\x01\n" +
 	"\x11ConversionService\x12]\n" +
 	"\x10CreateConversion\x12*.CurrencyConverter.CreateConversionRequest\x1a\x1d.CurrencyConverter.Conversion\x12U\n" +
 	"\x0fListConversions\x12\x16.google.protobuf.Empty\x1a*.CurrencyConverter.ListConversionsResponseB)Z'currency-converter/internal/proto;protob\x06proto3"
 
 var (
-	file_entities_proto_rawDescOnce sync.Once
-	file_entities_proto_rawDescData []byte
+	file_proto_entities_proto_rawDescOnce sync.Once
+	file_proto_entities_proto_rawDescData []byte
 )
 
-func file_entities_proto_rawDescGZIP() []byte {
-	file_entities_proto_rawDescOnce.Do(func() {
-		file_entities_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_entities_proto_rawDesc), len(file_entities_proto_rawDesc)))
+func file_proto_entities_proto_rawDescGZIP() []byte {
+	file_proto_entities_proto_rawDescOnce.Do(func() {
+		file_proto_entities_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_proto_entities_proto_rawDesc), len(file_proto_entities_proto_rawDesc)))
 	})
-	return file_entities_proto_rawDescData
+	return file_proto_entities_proto_rawDescData
 }
 
-var file_entities_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
-var file_entities_proto_goTypes = []any{
+var file_proto_entities_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_proto_entities_proto_goTypes = []any{
 	(*Currency)(nil),                // 0: CurrencyConverter.Currency
 	(*Conversion)(nil),              // 1: CurrencyConverter.Conversion
 	(*CreateCurrencyRequest)(nil),   // 2: CurrencyConverter.CreateCurrencyRequest
@@ -410,7 +409,7 @@ var file_entities_proto_goTypes = []any{
 	(*ListConversionsResponse)(nil), // 5: CurrencyConverter.ListConversionsResponse
 	(*emptypb.Empty)(nil),           // 6: google.protobuf.Empty
 }
-var file_entities_proto_depIdxs = []int32{
+var file_proto_entities_proto_depIdxs = []int32{
 	0,  // 0: CurrencyConverter.Conversion.from:type_name -> CurrencyConverter.Currency
 	0,  // 1: CurrencyConverter.Conversion.to:type_name -> CurrencyConverter.Currency
 	0,  // 2: CurrencyConverter.CreateCurrencyRequest.currency:type_name -> CurrencyConverter.Currency
@@ -419,44 +418,42 @@ var file_entities_proto_depIdxs = []int32{
 	2,  // 5: CurrencyConverter.CurrencyService.CreateCurrency:input_type -> CurrencyConverter.CreateCurrencyRequest
 	0,  // 6: CurrencyConverter.CurrencyService.GetCurrency:input_type -> CurrencyConverter.Currency
 	0,  // 7: CurrencyConverter.CurrencyService.UpdateCurrency:input_type -> CurrencyConverter.Currency
-	0,  // 8: CurrencyConverter.CurrencyService.DeleteCurrency:input_type -> CurrencyConverter.Currency
-	6,  // 9: CurrencyConverter.CurrencyService.ListCurrencies:input_type -> google.protobuf.Empty
-	4,  // 10: CurrencyConverter.ConversionService.CreateConversion:input_type -> CurrencyConverter.CreateConversionRequest
-	6,  // 11: CurrencyConverter.ConversionService.ListConversions:input_type -> google.protobuf.Empty
-	0,  // 12: CurrencyConverter.CurrencyService.CreateCurrency:output_type -> CurrencyConverter.Currency
-	0,  // 13: CurrencyConverter.CurrencyService.GetCurrency:output_type -> CurrencyConverter.Currency
-	0,  // 14: CurrencyConverter.CurrencyService.UpdateCurrency:output_type -> CurrencyConverter.Currency
-	6,  // 15: CurrencyConverter.CurrencyService.DeleteCurrency:output_type -> google.protobuf.Empty
-	3,  // 16: CurrencyConverter.CurrencyService.ListCurrencies:output_type -> CurrencyConverter.ListCurrenciesResponse
-	1,  // 17: CurrencyConverter.ConversionService.CreateConversion:output_type -> CurrencyConverter.Conversion
-	5,  // 18: CurrencyConverter.ConversionService.ListConversions:output_type -> CurrencyConverter.ListConversionsResponse
-	12, // [12:19] is the sub-list for method output_type
-	5,  // [5:12] is the sub-list for method input_type
+	6,  // 8: CurrencyConverter.CurrencyService.ListCurrencies:input_type -> google.protobuf.Empty
+	4,  // 9: CurrencyConverter.ConversionService.CreateConversion:input_type -> CurrencyConverter.CreateConversionRequest
+	6,  // 10: CurrencyConverter.ConversionService.ListConversions:input_type -> google.protobuf.Empty
+	0,  // 11: CurrencyConverter.CurrencyService.CreateCurrency:output_type -> CurrencyConverter.Currency
+	0,  // 12: CurrencyConverter.CurrencyService.GetCurrency:output_type -> CurrencyConverter.Currency
+	0,  // 13: CurrencyConverter.CurrencyService.UpdateCurrency:output_type -> CurrencyConverter.Currency
+	3,  // 14: CurrencyConverter.CurrencyService.ListCurrencies:output_type -> CurrencyConverter.ListCurrenciesResponse
+	1,  // 15: CurrencyConverter.ConversionService.CreateConversion:output_type -> CurrencyConverter.Conversion
+	5,  // 16: CurrencyConverter.ConversionService.ListConversions:output_type -> CurrencyConverter.ListConversionsResponse
+	11, // [11:17] is the sub-list for method output_type
+	5,  // [5:11] is the sub-list for method input_type
 	5,  // [5:5] is the sub-list for extension type_name
 	5,  // [5:5] is the sub-list for extension extendee
 	0,  // [0:5] is the sub-list for field type_name
 }
 
-func init() { file_entities_proto_init() }
-func file_entities_proto_init() {
-	if File_entities_proto != nil {
+func init() { file_proto_entities_proto_init() }
+func file_proto_entities_proto_init() {
+	if File_proto_entities_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_entities_proto_rawDesc), len(file_entities_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_entities_proto_rawDesc), len(file_proto_entities_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   2,
 		},
-		GoTypes:           file_entities_proto_goTypes,
-		DependencyIndexes: file_entities_proto_depIdxs,
-		MessageInfos:      file_entities_proto_msgTypes,
+		GoTypes:           file_proto_entities_proto_goTypes,
+		DependencyIndexes: file_proto_entities_proto_depIdxs,
+		MessageInfos:      file_proto_entities_proto_msgTypes,
 	}.Build()
-	File_entities_proto = out.File
-	file_entities_proto_goTypes = nil
-	file_entities_proto_depIdxs = nil
+	File_proto_entities_proto = out.File
+	file_proto_entities_proto_goTypes = nil
+	file_proto_entities_proto_depIdxs = nil
 }

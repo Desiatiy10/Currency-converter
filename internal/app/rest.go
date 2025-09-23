@@ -10,8 +10,8 @@ import (
 )
 
 type Server struct {
-	httpServer *http.Server
-	curHandler *handler.CurrencyHandler
+	httpServer  *http.Server
+	curHandler  *handler.CurrencyHandler
 	convHandler *handler.ConversionHandler
 }
 
@@ -22,7 +22,6 @@ func New(addr string, curHand *handler.CurrencyHandler, convHand *handler.Conver
 	mux.HandleFunc("GET /currency/{code}", curHand.GetCurrency)
 	mux.HandleFunc("GET /currencies", curHand.ListCurrencies)
 	mux.HandleFunc("PUT /currency/{code}", curHand.UpdateCurrency)
-	mux.HandleFunc("DELETE /currency/{code}", curHand.DeleteCurrency)
 
 	mux.HandleFunc("POST /conversion", convHand.CreateConversion)
 	mux.HandleFunc("GET /conversions", convHand.ListConversions)
@@ -34,13 +33,13 @@ func New(addr string, curHand *handler.CurrencyHandler, convHand *handler.Conver
 			Addr:    addr,
 			Handler: mux,
 		},
-		curHandler: curHand,
+		curHandler:  curHand,
 		convHandler: convHand,
 	}
 }
 
 func (s *Server) Start() error {
-	log.Println("REST server starting on: ", s.httpServer.Addr)
+	log.Println("REST server starting on port", s.httpServer.Addr)
 	return s.httpServer.ListenAndServe()
 }
 

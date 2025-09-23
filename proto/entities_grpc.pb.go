@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v6.32.0
-// source: entities.proto
+// source: proto/entities.proto
 
 package proto
 
@@ -23,7 +23,6 @@ const (
 	CurrencyService_CreateCurrency_FullMethodName = "/CurrencyConverter.CurrencyService/CreateCurrency"
 	CurrencyService_GetCurrency_FullMethodName    = "/CurrencyConverter.CurrencyService/GetCurrency"
 	CurrencyService_UpdateCurrency_FullMethodName = "/CurrencyConverter.CurrencyService/UpdateCurrency"
-	CurrencyService_DeleteCurrency_FullMethodName = "/CurrencyConverter.CurrencyService/DeleteCurrency"
 	CurrencyService_ListCurrencies_FullMethodName = "/CurrencyConverter.CurrencyService/ListCurrencies"
 )
 
@@ -34,7 +33,6 @@ type CurrencyServiceClient interface {
 	CreateCurrency(ctx context.Context, in *CreateCurrencyRequest, opts ...grpc.CallOption) (*Currency, error)
 	GetCurrency(ctx context.Context, in *Currency, opts ...grpc.CallOption) (*Currency, error)
 	UpdateCurrency(ctx context.Context, in *Currency, opts ...grpc.CallOption) (*Currency, error)
-	DeleteCurrency(ctx context.Context, in *Currency, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListCurrencies(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListCurrenciesResponse, error)
 }
 
@@ -76,16 +74,6 @@ func (c *currencyServiceClient) UpdateCurrency(ctx context.Context, in *Currency
 	return out, nil
 }
 
-func (c *currencyServiceClient) DeleteCurrency(ctx context.Context, in *Currency, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, CurrencyService_DeleteCurrency_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *currencyServiceClient) ListCurrencies(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListCurrenciesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListCurrenciesResponse)
@@ -103,7 +91,6 @@ type CurrencyServiceServer interface {
 	CreateCurrency(context.Context, *CreateCurrencyRequest) (*Currency, error)
 	GetCurrency(context.Context, *Currency) (*Currency, error)
 	UpdateCurrency(context.Context, *Currency) (*Currency, error)
-	DeleteCurrency(context.Context, *Currency) (*emptypb.Empty, error)
 	ListCurrencies(context.Context, *emptypb.Empty) (*ListCurrenciesResponse, error)
 	mustEmbedUnimplementedCurrencyServiceServer()
 }
@@ -123,9 +110,6 @@ func (UnimplementedCurrencyServiceServer) GetCurrency(context.Context, *Currency
 }
 func (UnimplementedCurrencyServiceServer) UpdateCurrency(context.Context, *Currency) (*Currency, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateCurrency not implemented")
-}
-func (UnimplementedCurrencyServiceServer) DeleteCurrency(context.Context, *Currency) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteCurrency not implemented")
 }
 func (UnimplementedCurrencyServiceServer) ListCurrencies(context.Context, *emptypb.Empty) (*ListCurrenciesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListCurrencies not implemented")
@@ -205,24 +189,6 @@ func _CurrencyService_UpdateCurrency_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
-func _CurrencyService_DeleteCurrency_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Currency)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(CurrencyServiceServer).DeleteCurrency(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: CurrencyService_DeleteCurrency_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CurrencyServiceServer).DeleteCurrency(ctx, req.(*Currency))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _CurrencyService_ListCurrencies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
@@ -261,16 +227,12 @@ var CurrencyService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _CurrencyService_UpdateCurrency_Handler,
 		},
 		{
-			MethodName: "DeleteCurrency",
-			Handler:    _CurrencyService_DeleteCurrency_Handler,
-		},
-		{
 			MethodName: "ListCurrencies",
 			Handler:    _CurrencyService_ListCurrencies_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "entities.proto",
+	Metadata: "proto/entities.proto",
 }
 
 const (
@@ -410,5 +372,5 @@ var ConversionService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "entities.proto",
+	Metadata: "proto/entities.proto",
 }
