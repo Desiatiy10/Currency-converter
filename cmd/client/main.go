@@ -64,12 +64,6 @@ func main() {
 		fmt.Printf("- %s (%s): %.2f\n", c.Code, c.Name, c.Rate)
 	}
 
-	_, err = client.DeleteCurrency(ctx, &pb.Currency{Code: "USD"})
-	if err != nil {
-		log.Fatalf("error DeleteCurrency: %v", err)
-	}
-	fmt.Println("USD удалена")
-
 	list2, _ := client.ListCurrencies(ctx, &emptypb.Empty{})
 	fmt.Println("Список валют после удаления:", list2.Currencies)
 

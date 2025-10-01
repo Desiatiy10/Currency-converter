@@ -138,6 +138,9 @@ func (r *repo) GetConversions() []*model.Conversion {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 
+	if r.conversions == nil {
+		return []*model.Conversion{} 
+	}
 	result := make([]*model.Conversion, len(r.conversions))
 	copy(result, r.conversions)
 	return result

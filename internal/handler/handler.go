@@ -151,7 +151,7 @@ func (h *ConversionHandler) CreateConversion(res http.ResponseWriter, req *http.
 		httputil.WriteError(res, http.StatusBadRequest, "Invalid JSON format")
 		return
 	}
-	conv, err := h.svc.CreateConversion(convReq.Amount, convReq.From, convReq.To)
+	conv, err := h.svc.CreateConversion(&convReq)
 	if err != nil {
 		switch {
 		case strings.Contains(err.Error(), "not found"):

@@ -25,7 +25,7 @@ func (s *CurrencyServer) CreateCurrency(ctx context.Context, req *proto.CreateCu
 	if req.Currency == nil {
 		return nil, status.Errorf(codes.InvalidArgument, "Currency object is required")
 	}
-	
+
 	switch {
 	case req.Currency.Code == "":
 		return nil, status.Errorf(codes.InvalidArgument, "Currency code cannot be empty")
@@ -62,7 +62,7 @@ func (s *CurrencyServer) ListCurrencies(ctx context.Context, _ *emptypb.Empty) (
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "Failed to retrieve currency list: %v", err)
 	}
-	
+
 	result := make([]*proto.Currency, 0, len(data))
 	for _, v := range data {
 		result = append(result, &proto.Currency{
@@ -79,12 +79,12 @@ func (s *CurrencyServer) GetCurrency(ctx context.Context, req *proto.Currency) (
 	if req.Code == "" {
 		return nil, status.Errorf(codes.InvalidArgument, "Currency code is required")
 	}
-	
+
 	data, err := s.svc.GetCurrency(req.Code)
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, "Currency '%s' not found in the system", req.Code)
 	}
-	
+
 	return &proto.Currency{
 		Code:   data.Code,
 		Rate:   data.Rate,
@@ -106,19 +106,19 @@ func (s *CurrencyServer) UpdateCurrency(ctx context.Context, req *proto.Currency
 	case req.Symbol == "":
 		return nil, status.Errorf(codes.InvalidArgument, "Currency symbol cannot be empty")
 	}
-	
+
 	cur := &model.Currency{
 		Code:   req.Code,
 		Rate:   req.Rate,
 		Name:   req.Name,
 		Symbol: req.Symbol,
 	}
-	
+
 	updated, err := s.svc.UpdateCurrency(cur)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "Failed to update currency: %v", err)
 	}
-	
+
 	return &proto.Currency{
 		Code:   updated.Code,
 		Rate:   updated.Rate,
@@ -177,7 +177,13 @@ func (s *ConversionServer) CreateConversion(ctx context.Context, req *proto.Crea
 		return nil, status.Errorf(codes.InvalidArgument, "Target currency code is required")
 	}
 
-	conv, err := s.svc.CreateConversion(req.Amount, req.From, req.To)
+	convReq := &model.ConversionRequest{
+		Amount: req.Amount,
+		From:   req.From,
+		To:     req.To,
+	}
+
+	conv, err := s.svc.CreateConversion(convReq)
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "Conversion failed: %v", err)
 	}

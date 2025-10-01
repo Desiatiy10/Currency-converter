@@ -51,7 +51,8 @@ func main() {
 	cbrClient := cbr.NewCBRClient()
 
 	//Service
-	srvc := service.InitService(ctx, repo, cbrClient)
+	srvc := service.NewService(repo, cbrClient)
+	srvc.Start(ctx)
 
 	//Handlers
 	curHandler := handler.NewCurrencyHandler(srvc)
