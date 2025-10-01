@@ -1,0 +1,32 @@
+# --- Скомпилированные бинарники ---
+/bin/
+/build/
+/out/
+
+# --- Временные файлы сборки ---
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# --- Папки и файлы тестов ---
+coverage.out
+coverage.html
+coverage
+
+# --- Файлы IDE и редакторов ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- Go modules ---
+/vendor/
+
+# --- Логи ---
+*.log
+
+# --- OS файлы ---
+.DS_Store
+Thumbs.db
