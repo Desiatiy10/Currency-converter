@@ -11,15 +11,17 @@ import (
 )
 
 type Service interface {
+	Start(ctx context.Context)
+
 	AddEntity(e model.Entity) error
 
 	CreateCurrency(*model.Currency) (*model.Currency, error)
 	ListCurrencies() (map[string]*model.Currency, error)
-	GetCurrency(code string) (*model.Currency, error)
+	GetCurrency(code string)(*model.Currency, error)
 	UpdateCurrency(cur *model.Currency) (*model.Currency, error)
 
 	ListConversions() ([]*model.Conversion, error)
-	CreateConversion(amount float64, fromCode, toCode string) (*model.Conversion, error)
+	CreateConversion(req *model.ConversionRequest) (*model.Conversion, error)
 }
 
 type service struct {
@@ -28,11 +30,14 @@ type service struct {
 	cbrClient  *cbr.CBRClient
 }
 
-func NewService(repo repository.Repository) *service {
+func NewService(repo repository.Repository, cbrClient *cbr.CBRClient) Service {
+	if cbrClient == nil {
+		cbrClient = cbr.NewCBRClient()
+	}
 	return &service{
 		repo:       repo,
 		entityChan: make(chan model.Entity, 56),
-		cbrClient:  cbr.NewCBRClient(),
+		cbrClient:  cbrClient,
 	}
 }
 
@@ -217,15 +222,11 @@ func (s *service) startLogging(ctx context.Context) {
 	}
 }
 
-func InitService(ctx context.Context, repo repository.Repository, cbrClient *cbr.CBRClient) *service {
-	s := NewService(repo)
-
+func (s *service) Start(ctx context.Context) {
 	go s.processEntities(ctx)
 	go s.syncCBRData(ctx)
 	go s.startLogging(ctx)
-
-	log.Println("Currency converter service initialized successfully")
-	return s
+	log.Println("Currency converter service started")
 }
 
 func (s *service) AddEntity(entity model.Entity) error {
@@ -244,7 +245,11 @@ func (s *service) CreateCurrency(cur *model.Currency) (*model.Currency, error) {
 	if cur.Code == "" || cur.Rate <= 0 || cur.Name == "" || cur.Symbol == "" {
 		return nil, fmt.Errorf("invalid currency data: all fields must be provided and rate must be positive")
 	}
-  
+
+	if _, exists := s.repo.GetCurrencies()[cur.Code]; exists {
+		return nil, fmt.Errorf("currency %s already exists", cur.Code)
+	}
+
 	if err := s.AddEntity(cur); err != nil {
 		return nil, fmt.Errorf("failed to create currency: %v", err)
 	}
@@ -274,8 +279,11 @@ func (s *service) GetCurrency(code string) (*model.Currency, error) {
 }
 
 func (s *service) UpdateCurrency(cur *model.Currency) (*model.Currency, error) {
-	if cur.Code == "" {
-		return nil, fmt.Errorf("currency code is required for update")
+	if cur.Code == "" || cur.Rate <= 0 || cur.Name == "" || cur.Symbol == "" {
+		return nil, fmt.Errorf("invalid currency data: all fields must be provided and rate must be positive")
+	}
+	if len(cur.Code) != 3 {
+		return nil, fmt.Errorf("currency code must be 3 characters")
 	}
 
 	err := s.repo.UpdateCurrency(cur)
@@ -293,38 +301,45 @@ func (s *service) ListConversions() ([]*model.Conversion, error) {
 	return conversions, nil
 }
 
-func (s *service) CreateConversion(nominal float64, fromCode, toCode string) (*model.Conversion, error) {
-	if nominal <= 0 {
+func (s *service) CreateConversion(conv *model.ConversionRequest) (*model.Conversion, error) {
+	if conv.Amount <= 0 {
 		return nil, fmt.Errorf("conversion amount must be greater than zero")
 	}
-	if fromCode == "" || toCode == "" {
+	if conv.From == "" || conv.To == "" {
 		return nil, fmt.Errorf("source and target currency codes are required")
 	}
 
 	curs := s.repo.GetCurrencies()
-	from, ok1 := curs[fromCode]
+	from, ok1 := curs[conv.From]
 	if !ok1 {
-		return nil, fmt.Errorf("source currency '%s' not found", fromCode)
-	} else if from.Rate <= 0 {
-		return nil, fmt.Errorf("invalid exchange rates - both must be positive values")
+		return nil, fmt.Errorf("source currency '%s' not found", conv.From)
 	}
-  
-	to, ok2 := curs[toCode]
-	if !ok2 {
-		return nil, fmt.Errorf("target currency '%s' not found", toCode)
-	} else if to.Rate <= 0 {
-		return nil, fmt.Errorf("invalid exchange rates - both must be positive values")
+	if from.Rate <= 0 {
+		return nil, fmt.Errorf("invalid exchange rate for source '%s'", from.Code)
 	}
 
-	nominalInRubles := nominal * from.Rate
+	to, ok2 := curs[conv.To]
+	if !ok2 {
+		return nil, fmt.Errorf("target currency '%s' not found", conv.To)
+	}
+	if to == from {
+		return nil, fmt.Errorf("currencies should be different")
+	}
+	if to.Rate <= 0 {
+		return nil, fmt.Errorf("invalid exchange rate for target '%s'", to.Code)
+	}
+
+	nominalInRubles := conv.Amount * from.Rate
 	result := nominalInRubles / to.Rate
 
-	conv := model.NewConversion(nominal, from, to, result)
+	conversion := model.NewConversion(conv.Amount, from, to, result)
 
-	if err := s.AddEntity(conv); err != nil {
+	if err := s.AddEntity(conversion); err != nil {
 		return nil, fmt.Errorf("failed to save conversion: %v", err)
 	}
 
-	log.Printf("Conversion completed: %.2f %s → %.2f %s", amount, fromCode, result, toCode)
-	return conv, nil
+	log.Printf("Conversion completed: %.2f %s → %.2f %s",
+		conversion.Amount, from.Code, result, to.Code)
+
+	return conversion, nil
 }
