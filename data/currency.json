@@ -1,31 +1,31 @@
 {
   "AED": {
     "code": "AED",
-    "rate": 22.7612,
+    "rate": 23.4048,
     "name": "Дирхам ОАЭ",
     "symbol": "د.إ"
   },
   "AMD": {
     "code": "AMD",
-    "rate": 0.218337,
+    "rate": 0.23583300000000001,
     "name": "Армянских драмов",
     "symbol": "֏"
   },
   "AUD": {
     "code": "AUD",
-    "rate": 55.1362,
+    "rate": 61.7408,
     "name": "Австралийский доллар",
     "symbol": "A$"
   },
   "AZN": {
     "code": "AZN",
-    "rate": 49.1708,
+    "rate": 50.5612,
     "name": "Азербайджанский манат",
     "symbol": "₼"
   },
   "BDT": {
     "code": "BDT",
-    "rate": 0.6862739999999999,
+    "rate": 0.698412,
     "name": "Так",
     "symbol": "৳"
   },
@@ -37,217 +37,217 @@
   },
   "BHD": {
     "code": "BHD",
-    "rate": 222.2669,
+    "rate": 228.552,
     "name": "Бахрейнский динар",
     "symbol": ".ب.د"
   },
   "BOB": {
     "code": "BOB",
-    "rate": 12.097,
+    "rate": 7.34023,
     "name": "Боливиано",
     "symbol": "Bs."
   },
   "BRL": {
     "code": "BRL",
-    "rate": 15.7697,
+    "rate": 16.6574,
     "name": "Бразильский реал",
     "symbol": "R$"
   },
   "BYN": {
     "code": "BYN",
-    "rate": 27.4697,
+    "rate": 28.3294,
     "name": "Белорусский рубль",
     "symbol": "Br"
   },
   "CAD": {
     "code": "CAD",
-    "rate": 60.5859,
+    "rate": 61.9444,
     "name": "Канадский доллар",
     "symbol": "C$"
   },
   "CHF": {
     "code": "CHF",
-    "rate": 105.1055,
+    "rate": 106.6958,
     "name": "Швейцарский франк",
     "symbol": "CHF"
   },
   "CNY": {
     "code": "CNY",
-    "rate": 11.706,
+    "rate": 12.7691,
     "name": "Юань",
     "symbol": "¥"
   },
   "CUP": {
     "code": "CUP",
-    "rate": 3.4829300000000005,
+    "rate": 3.58142,
     "name": "Кубинских песо",
     "symbol": "C$"
   },
   "CZK": {
     "code": "CZK",
-    "rate": 4.03994,
+    "rate": 4.14536,
     "name": "Чешских крон",
     "symbol": "Kč"
   },
   "DKK": {
     "code": "DKK",
-    "rate": 13.2339,
+    "rate": 13.4167,
     "name": "Датская крона",
     "symbol": "kr"
   },
   "DZD": {
     "code": "DZD",
-    "rate": 0.6477249999999999,
+    "rate": 0.6464749999999999,
     "name": "Алжирских динаров",
     "symbol": "د.ج"
   },
   "EGP": {
     "code": "EGP",
-    "rate": 1.7343,
+    "rate": 1.71162,
     "name": "Египетских фунтов",
     "symbol": "ج.م"
   },
   "ETB": {
     "code": "ETB",
-    "rate": 0.5816870000000001,
+    "rate": 0.5357999999999999,
     "name": "Эфиопских быров",
     "symbol": "Br"
   },
   "EUR": {
     "code": "EUR",
-    "rate": 98.8845,
+    "rate": 100.2998,
     "name": "Евро",
     "symbol": "€"
   },
   "GBP": {
     "code": "GBP",
-    "rate": 113.2817,
+    "rate": 116.7944,
     "name": "Фунт стерлингов",
     "symbol": "£"
   },
   "GEL": {
     "code": "GEL",
-    "rate": 30.5565,
+    "rate": 32.8132,
     "name": "Лари",
     "symbol": "₾"
   },
   "HKD": {
     "code": "HKD",
-    "rate": 10.7692,
+    "rate": 10.9635,
     "name": "Гонконгский доллар",
     "symbol": "HK$"
   },
   "HUF": {
     "code": "HUF",
-    "rate": 0.252014,
+    "rate": 0.275,
     "name": "Форинтов",
     "symbol": "Ft"
   },
   "IDR": {
     "code": "IDR",
-    "rate": 0.0050667,
+    "rate": 0.0048515,
     "name": "Рупий",
     "symbol": "Rp"
   },
   "INR": {
     "code": "INR",
-    "rate": 0.946605,
+    "rate": 0.899919,
     "name": "Индийских рупий",
     "symbol": "₹"
   },
   "IRR": {
     "code": "IRR",
-    "rate": 0.000144209,
+    "rate": 0.0000546339,
     "name": "Иранских риалов",
     "symbol": "﷼"
   },
   "JPY": {
     "code": "JPY",
-    "rate": 0.564991,
+    "rate": 0.540014,
     "name": "Иен",
     "symbol": "¥"
   },
   "KGS": {
     "code": "KGS",
-    "rate": 0.955865,
+    "rate": 0.982894,
     "name": "Сомов",
     "symbol": "сом"
   },
   "KRW": {
     "code": "KRW",
-    "rate": 0.060371499999999995,
+    "rate": 0.0620787,
     "name": "Вон",
     "symbol": "₩"
   },
   "KZT": {
     "code": "KZT",
-    "rate": 0.154414,
+    "rate": 0.187317,
     "name": "Тенге",
     "symbol": "₸"
   },
   "MDL": {
     "code": "MDL",
-    "rate": 5.0743,
+    "rate": 4.97287,
     "name": "Молдавских леев",
     "symbol": "lei"
   },
   "MMK": {
     "code": "MMK",
-    "rate": 0.039805,
+    "rate": 0.0409305,
     "name": "Кьятов",
     "symbol": "K"
   },
   "MNT": {
     "code": "MNT",
-    "rate": 0.023254999999999998,
+    "rate": 0.023905000000000003,
     "name": "Тугриков",
     "symbol": "₮"
   },
   "NGN": {
     "code": "NGN",
-    "rate": 0.055765,
+    "rate": 0.0639733,
     "name": "Найр",
     "symbol": "₦"
   },
   "NOK": {
     "code": "NOK",
-    "rate": 8.52572,
+    "rate": 9.214929999999999,
     "name": "Норвежских крон",
     "symbol": "kr"
   },
   "NZD": {
     "code": "NZD",
-    "rate": 49.1303,
+    "rate": 51.147,
     "name": "Новозеландский доллар",
     "symbol": "NZ$"
   },
   "OMR": {
     "code": "OMR",
-    "rate": 217.4003,
+    "rate": 223.5477,
     "name": "Оманский риал",
     "symbol": "ر.ع"
   },
   "PLN": {
     "code": "PLN",
-    "rate": 23.0416,
+    "rate": 23.1364,
     "name": "Злотый",
     "symbol": "zł"
   },
   "QAR": {
     "code": "QAR",
-    "rate": 22.9644,
+    "rate": 23.6138,
     "name": "Катарский риал",
     "symbol": "ر.ق"
   },
   "RON": {
     "code": "RON",
-    "rate": 19.3774,
+    "rate": 19.0328,
     "name": "Румынский лей",
     "symbol": "lei"
   },
   "RSD": {
     "code": "RSD",
-    "rate": 0.839979,
+    "rate": 0.8535630000000001,
     "name": "Сербских динаров",
     "symbol": "din"
   },
@@ -259,79 +259,79 @@
   },
   "SAR": {
     "code": "SAR",
-    "rate": 22.2908,
+    "rate": 22.9211,
     "name": "Саудовский риял",
     "symbol": "ر.س"
   },
   "SEK": {
     "code": "SEK",
-    "rate": 8.98228,
+    "rate": 9.053560000000001,
     "name": "Шведских крон",
     "symbol": "kr"
   },
   "SGD": {
     "code": "SGD",
-    "rate": 65.198,
+    "rate": 67.6271,
     "name": "Сингапурский доллар",
     "symbol": "S$"
   },
   "THB": {
     "code": "THB",
-    "rate": 2.62327,
+    "rate": 2.61864,
     "name": "Батов",
     "symbol": "฿"
   },
   "TJS": {
     "code": "TJS",
-    "rate": 8.86177,
+    "rate": 9.29284,
     "name": "Сомони",
     "symbol": "сомони"
   },
   "TMT": {
     "code": "TMT",
-    "rate": 23.883,
+    "rate": 24.5583,
     "name": "Новый туркменский манат",
     "symbol": "m"
   },
   "TRY": {
     "code": "TRY",
-    "rate": 2.02505,
+    "rate": 1.7880099999999999,
     "name": "Турецких лир",
     "symbol": "₺"
   },
   "UAH": {
     "code": "UAH",
-    "rate": 2.02642,
+    "rate": 1.92962,
     "name": "Гривен",
     "symbol": "₴"
   },
   "USD": {
     "code": "USD",
-    "rate": 76,
+    "rate": 85.9541,
     "name": "Доллар США",
     "symbol": "$"
   },
   "UZS": {
     "code": "UZS",
-    "rate": 0.006787850000000001,
+    "rate": 0.00726965,
     "name": "Узбекских сумов",
     "symbol": "so'm"
   },
   "VND": {
     "code": "VND",
-    "rate": 0.00331892,
+    "rate": 0.00335614,
     "name": "Донгов",
     "symbol": "₫"
   },
   "XDR": {
     "code": "XDR",
-    "rate": 115.1132,
+    "rate": 117.9574,
     "name": "СДР (специальные права заимствования)",
     "symbol": "XDR"
   },
   "ZAR": {
     "code": "ZAR",
-    "rate": 4.8240099999999995,
+    "rate": 5.38468,
     "name": "Рэндов",
     "symbol": "R"
   }

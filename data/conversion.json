@@ -254,5 +254,21 @@
       "symbol": "₽"
     },
     "result": 98884.5
+  },
+  {
+    "amount": 100,
+    "from": {
+      "code": "USD",
+      "rate": 85.9541,
+      "name": "Доллар США",
+      "symbol": "$"
+    },
+    "to": {
+      "code": "RUB",
+      "rate": 1,
+      "name": "Российский рубль",
+      "symbol": "₽"
+    },
+    "result": 8595.41
   }
 ]

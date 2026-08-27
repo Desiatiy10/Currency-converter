@@ -124,7 +124,6 @@ func (s *service) loadCBRData(ctx context.Context) error {
 		}
 	}
 
-	time.Sleep(time.Millisecond)
 	log.Printf("Loaded %d currencies from ЦБ РФ", len(baseRates))
 	return nil
 }
@@ -219,6 +218,9 @@ func (s *service) startLogging(ctx context.Context) {
 
 func InitService(ctx context.Context, repo repository.Repository, cbrClient *cbr.CBRClient) *service {
 	s := NewService(repo)
+	if cbrClient != nil {
+		s.cbrClient = cbrClient
+	}
 
 	go s.processEntities(ctx)
 	go s.syncCBRData(ctx)
@@ -241,10 +243,13 @@ func (s *service) AddEntity(entity model.Entity) error {
 }
 
 func (s *service) CreateCurrency(cur *model.Currency) (*model.Currency, error) {
+	if cur == nil {
+		return nil, fmt.Errorf("currency cannot be nil")
+	}
 	if cur.Code == "" || cur.Rate <= 0 || cur.Name == "" || cur.Symbol == "" {
 		return nil, fmt.Errorf("invalid currency data: all fields must be provided and rate must be positive")
 	}
-  
+
 	if err := s.AddEntity(cur); err != nil {
 		return nil, fmt.Errorf("failed to create currency: %v", err)
 	}
@@ -274,6 +279,9 @@ func (s *service) GetCurrency(code string) (*model.Currency, error) {
 }
 
 func (s *service) UpdateCurrency(cur *model.Currency) (*model.Currency, error) {
+	if cur == nil {
+		return nil, fmt.Errorf("currency cannot be nil")
+	}
 	if cur.Code == "" {
 		return nil, fmt.Errorf("currency code is required for update")
 	}
@@ -308,7 +316,7 @@ func (s *service) CreateConversion(nominal float64, fromCode, toCode string) (*m
 	} else if from.Rate <= 0 {
 		return nil, fmt.Errorf("invalid exchange rates - both must be positive values")
 	}
-  
+
 	to, ok2 := curs[toCode]
 	if !ok2 {
 		return nil, fmt.Errorf("target currency '%s' not found", toCode)
@@ -325,6 +333,6 @@ func (s *service) CreateConversion(nominal float64, fromCode, toCode string) (*m
 		return nil, fmt.Errorf("failed to save conversion: %v", err)
 	}
 
-	log.Printf("Conversion completed: %.2f %s → %.2f %s", amount, fromCode, result, toCode)
+	log.Printf("Conversion completed: %.2f %s → %.2f %s", nominal, fromCode, result, toCode)
 	return conv, nil
 }
