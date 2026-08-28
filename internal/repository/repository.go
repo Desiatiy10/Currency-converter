@@ -5,13 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
 	"sync"
 )
 
-const (
-	currencyFile   = "data/currency.json"
-	conversionFile = "data/conversion.json"
-)
+var dataDir = findDataDir()
 
 type Repository interface {
 	Store(entity model.Entity) error
@@ -35,6 +33,33 @@ func NewRepository() Repository {
 	}
 }
 
+func findDataDir() string {
+	workingDir, err := os.Getwd()
+	if err != nil {
+		return "data"
+	}
+
+	for {
+		if _, err := os.Stat(filepath.Join(workingDir, "go.mod")); err == nil {
+			return filepath.Join(workingDir, "data")
+		}
+
+		parentDir := filepath.Dir(workingDir)
+		if parentDir == workingDir {
+			return filepath.Join(workingDir, "data")
+		}
+		workingDir = parentDir
+	}
+}
+
+func currencyFile() string {
+	return filepath.Join(dataDir, "currency.json")
+}
+
+func conversionFile() string {
+	return filepath.Join(dataDir, "conversion.json")
+}
+
 func (r *repo) Store(entity model.Entity) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
@@ -56,7 +81,7 @@ func (r *repo) saveCurrenciesToFile() error {
 	if err != nil {
 		return fmt.Errorf("failed to marshal currencies data: %w", err)
 	}
-	if err := os.WriteFile(currencyFile, data, 0644); err != nil {
+	if err := os.WriteFile(currencyFile(), data, 0644); err != nil {
 		return fmt.Errorf("failed to write currencies to file: %w", err)
 	}
 	return nil
@@ -67,14 +92,14 @@ func (r *repo) saveConversionsToFile() error {
 	if err != nil {
 		return fmt.Errorf("failed to marshal conversions data: %w", err)
 	}
-	if err := os.WriteFile(conversionFile, data, 0644); err != nil {
+	if err := os.WriteFile(conversionFile(), data, 0644); err != nil {
 		return fmt.Errorf("failed to write conversions to file: %w", err)
 	}
 	return nil
 }
 
 func (r *repo) LoadCurrencies() error {
-	fileData, err := os.ReadFile(currencyFile)
+	fileData, err := os.ReadFile(currencyFile())
 	if err != nil {
 		if os.IsNotExist(err) {
 			os.MkdirAll("data", 0755)
@@ -93,7 +118,7 @@ func (r *repo) LoadCurrencies() error {
 }
 
 func (r *repo) LoadConversions() error {
-	fileData, err := os.ReadFile(conversionFile)
+	fileData, err := os.ReadFile(conversionFile())
 	if err != nil {
 		if os.IsNotExist(err) {
 			os.MkdirAll("data", 0755)
