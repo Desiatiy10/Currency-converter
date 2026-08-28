@@ -30,7 +30,7 @@ func NewCurrencyHandler(svc service.Service) *CurrencyHandler {
 // @Router /currency [post]
 func (h *CurrencyHandler) CreateCurrency(res http.ResponseWriter, req *http.Request) {
 	var cur model.Currency
-	if err := httputil.ReadJson(*req, &cur); err != nil {
+	if err := httputil.ReadJson(req, &cur); err != nil {
 		httputil.WriteError(res, http.StatusBadRequest, "Invalid JSON format")
 		return
 	}
@@ -107,7 +107,7 @@ func (h *CurrencyHandler) UpdateCurrency(res http.ResponseWriter, req *http.Requ
 	}
 
 	var cur model.Currency
-	if err := httputil.ReadJson(*req, &cur); err != nil {
+	if err := httputil.ReadJson(req, &cur); err != nil {
 		httputil.WriteError(res, http.StatusBadRequest, "Invalid JSON format")
 		return
 	} else if cur.Rate <= 0 {
@@ -147,7 +147,7 @@ func NewConversionHandler(svc service.Service) *ConversionHandler {
 // @Router /conversion [post]
 func (h *ConversionHandler) CreateConversion(res http.ResponseWriter, req *http.Request) {
 	var convReq model.ConversionRequest
-	if err := httputil.ReadJson(*req, &convReq); err != nil {
+	if err := httputil.ReadJson(req, &convReq); err != nil {
 		httputil.WriteError(res, http.StatusBadRequest, "Invalid JSON format")
 		return
 	}
