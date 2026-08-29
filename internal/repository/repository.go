@@ -60,6 +60,10 @@ func conversionFile() string {
 	return filepath.Join(dataDir, "conversion.json")
 }
 
+func ensureDataDir() error {
+	return os.MkdirAll(dataDir, 0755)
+}
+
 func (r *repo) Store(entity model.Entity) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
@@ -77,6 +81,10 @@ func (r *repo) Store(entity model.Entity) error {
 }
 
 func (r *repo) saveCurrenciesToFile() error {
+	if err := ensureDataDir(); err != nil {
+		return fmt.Errorf("failed to create data directory: %w", err)
+	}
+
 	data, err := json.MarshalIndent(r.currencies, "", "  ")
 	if err != nil {
 		return fmt.Errorf("failed to marshal currencies data: %w", err)
@@ -88,6 +96,10 @@ func (r *repo) saveCurrenciesToFile() error {
 }
 
 func (r *repo) saveConversionsToFile() error {
+	if err := ensureDataDir(); err != nil {
+		return fmt.Errorf("failed to create data directory: %w", err)
+	}
+
 	data, err := json.MarshalIndent(r.conversions, "", "  ")
 	if err != nil {
 		return fmt.Errorf("failed to marshal conversions data: %w", err)
@@ -99,10 +111,13 @@ func (r *repo) saveConversionsToFile() error {
 }
 
 func (r *repo) LoadCurrencies() error {
+	if err := ensureDataDir(); err != nil {
+		return fmt.Errorf("failed to prepare data directory: %w", err)
+	}
+
 	fileData, err := os.ReadFile(currencyFile())
 	if err != nil {
 		if os.IsNotExist(err) {
-			os.MkdirAll("data", 0755)
 			return nil
 		}
 		return fmt.Errorf("failed to read currencies file: %w", err)
@@ -118,10 +133,13 @@ func (r *repo) LoadCurrencies() error {
 }
 
 func (r *repo) LoadConversions() error {
+	if err := ensureDataDir(); err != nil {
+		return fmt.Errorf("failed to prepare data directory: %w", err)
+	}
+
 	fileData, err := os.ReadFile(conversionFile())
 	if err != nil {
 		if os.IsNotExist(err) {
-			os.MkdirAll("data", 0755)
 			return nil
 		}
 		return fmt.Errorf("failed to read conversions file: %w", err)
